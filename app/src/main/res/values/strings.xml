@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BangKkuJaengI</string>
+    <string name="label_home">홈</string>
+    <string name="label_social">소셜</string>
 </resources>
