@@ -1,10 +1,11 @@
-package com.nemodream.bangkkujaengi
+package com.nemodream.bangkkujaengi.container
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.nemodream.bangkkujaengi.R
 import com.nemodream.bangkkujaengi.customer.ui.fragment.HomeFragment
 import com.nemodream.bangkkujaengi.customer.ui.fragment.SocialFragment
 import com.nemodream.bangkkujaengi.databinding.FragmentCustomerContainerBinding
