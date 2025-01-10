@@ -1,4 +1,4 @@
-// 김혜인 깃푸시 테
+// 김혜인 깃푸시 테스트
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
 import android.os.Bundle
