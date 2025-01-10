@@ -2,4 +2,8 @@
     <string name="app_name">BangKkuJaengI</string>
     <string name="label_home">홈</string>
     <string name="label_social">소셜</string>
+
+    <!-- 영어, 숫자, 특수문자만 입력을 위한 문자열 -->
+    <string name="digit_value">abcdefghijklmnopqrstuvwxyz0123456789_!@#</string>
+
 </resources>
