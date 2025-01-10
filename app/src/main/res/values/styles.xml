@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 이미지 모서리 둥글게 만들기 -->
+    <style name="RoundedCornerImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item> <!-- 둥근 모서리 크기 -->
+    </style>
 
     <!--  텍스트 스타일  -->
     <style name="AppToolbarTitleStyle" parent="TextAppearance.MaterialComponents.Headline6">
