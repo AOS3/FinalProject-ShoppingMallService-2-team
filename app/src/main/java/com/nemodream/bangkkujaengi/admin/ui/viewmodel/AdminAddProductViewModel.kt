@@ -69,6 +69,13 @@ class AdminAddProductViewModel @Inject constructor(
         _subCategory.value = subCategoryType
     }
 
+    fun getCategories(): List<CategoryType> =
+        CategoryType.entries.filter { it != CategoryType.ALL }
+
+    fun getSubCategories(categoryType: CategoryType): List<SubCategoryType> =
+        SubCategoryType.getSubCategories(categoryType)
+            .filter { !it.title.contains("전체") }
+
     fun setColors(color: String) {
         val currentColors = _colors.value?.toMutableList() ?: mutableListOf()
         currentColors.add(color)

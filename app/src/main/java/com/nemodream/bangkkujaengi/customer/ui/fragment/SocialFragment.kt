@@ -1,5 +1,6 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
+import android.R.attr.onClick
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.nemodream.bangkkujaengi.customer.data.model.SocialCategoryType
 import com.nemodream.bangkkujaengi.databinding.FragmentSocialBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.nemodream.bangkkujaengi.R
 
 class SocialFragment: Fragment() {
     private var _binding: FragmentSocialBinding? = null
@@ -62,6 +64,10 @@ class SocialFragment: Fragment() {
         with(binding) {
             toolbarSocial.setNavigationOnClickListener {
                 findNavController().navigateUp()
+            }
+
+            fabCreatePost.setOnClickListener {
+                findNavController().navigate(R.id.action_socialFragment_to_socialWritePictureFragment)
             }
         }
     }

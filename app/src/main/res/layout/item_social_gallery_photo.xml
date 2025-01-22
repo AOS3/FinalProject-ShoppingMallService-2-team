@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="140dp"
+    android:layout_height="140dp">
+
+    <!-- 이미지 뷰 -->
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:background="@android:color/darker_gray" />
+
+    <!-- 선택 표시용 반투명 원 -->
+    <View
+        android:id="@+id/selectionCircle"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/selection_circle"
+        android:layout_gravity="top|start"
+        android:visibility="visible" />
+
+</FrameLayout>

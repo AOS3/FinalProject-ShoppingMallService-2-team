@@ -74,7 +74,7 @@ class HomeRepository @Inject constructor(
             productName = getString("productName") ?: "",
             description = getString("description") ?: "",
             images = imageUrls,
-            isBest = getBoolean("isBest") ?: false,
+            isBest = getBoolean("best") ?: false,
             category = CategoryType.fromString(getString("category") ?: ""),
             subCategory = SubCategoryType.fromString(getString("subCategory") ?: ""),
             price = getLong("price")?.toInt() ?: 0,

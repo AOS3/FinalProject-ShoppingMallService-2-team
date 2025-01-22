@@ -24,6 +24,7 @@ class CustomerActivity : AppCompatActivity() {
     private val showBottomNavDestinations = listOf(
         R.id.navigation_home,
         R.id.navigation_social,
+        R.id.navigation_my_page,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

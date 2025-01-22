@@ -22,4 +22,5 @@ data class Product(
     val subCategory: SubCategoryType = SubCategoryType.ALL,
     val createdAt: Long = System.currentTimeMillis(),
     val colors: List<String> = emptyList(),
+    val delete: Boolean = false,
 ): Parcelable

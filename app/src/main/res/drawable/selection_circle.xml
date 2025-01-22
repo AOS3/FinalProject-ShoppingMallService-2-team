@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 기본 상태: 반투명 흰색 -->
+    <item android:state_selected="false">
+        <shape android:shape="oval">
+            <solid android:color="#80FFFFFF" /> <!-- 50% 투명 흰색 -->
+            <stroke android:width="2dp" android:color="#FFFFFFFF" />
+        </shape>
+    </item>
+    <!-- 선택 상태: 불투명 진한 갈색 -->
+    <item android:state_selected="true">
+        <shape android:shape="oval">
+            <solid android:color="#332828" /> <!-- 진한 갈색 -->
+            <stroke android:width="2dp" android:color="#FFFFFFFF" />
+        </shape>
+    </item>
+</selector>

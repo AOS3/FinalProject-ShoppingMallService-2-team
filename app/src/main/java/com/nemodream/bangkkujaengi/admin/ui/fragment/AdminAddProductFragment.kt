@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -17,15 +16,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.nemodream.bangkkujaengi.R
 import com.nemodream.bangkkujaengi.admin.ui.adapter.AdminProductColorAdapter
 import com.nemodream.bangkkujaengi.admin.ui.adapter.AdminProductImageAdapter
 import com.nemodream.bangkkujaengi.admin.ui.adapter.OnImageCancelClickListener
 import com.nemodream.bangkkujaengi.admin.ui.custom.CustomTextFieldDialog
 import com.nemodream.bangkkujaengi.admin.ui.viewmodel.AdminAddProductViewModel
 import com.nemodream.bangkkujaengi.customer.data.model.CategoryType
-import com.nemodream.bangkkujaengi.customer.data.model.SubCategoryType
 import com.nemodream.bangkkujaengi.databinding.FragmentAdminAddProductBinding
+import com.nemodream.bangkkujaengi.utils.createDropDownAdapter
 import com.nemodream.bangkkujaengi.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -117,21 +115,16 @@ class AdminAddProductFragment : Fragment(), OnImageCancelClickListener {
 
     /*
     * 서브 카테고리 드롭다운 리스트 추가
+    * 각 카테고리에 맞는 서브 카테고리를 가져온다.
+    * 선택된 서브 카테고리를 설정하여 텍스트필드에 표시한다.
     * */
     private fun setupCategoryAndSubCategoryDropdown() {
-        // Category Dropdown 설정
-        val categoryTitles = CategoryType.entries.map { it.getTabTitle() }
-        val categoryAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_dropdown_category,
-            categoryTitles
-        )
+        val categories = viewModel.getCategories()
 
         binding.autoCompleteCategory.apply {
-            setAdapter(categoryAdapter)
+            setAdapter(appContext.createDropDownAdapter(categories.map { it.getTabTitle() }))
             setOnItemClickListener { _, _, position, _ ->
-                // 선택한 카테고리를 Enum으로 가져옴
-                val selectedCategory = CategoryType.entries[position]
+                val selectedCategory = categories[position]
                 viewModel.setCategory(selectedCategory)
                 updateSubCategoryDropdown(selectedCategory)
                 validateFields()
@@ -141,27 +134,17 @@ class AdminAddProductFragment : Fragment(), OnImageCancelClickListener {
 
     /*
     * 서브 카테고리 드롭다운 리스트 추가
-    * 각 카테고리에 맞는 서브 카테고리를 가져온다.
-    * 선택된 서브 카테고리를 설정하여 텍스트필드에 표시한다.
     * */
     private fun updateSubCategoryDropdown(categoryType: CategoryType) {
         clearSubCategory()
-        val subCategoryList = SubCategoryType.getSubCategories(categoryType)
-        val subCategoryTitles = subCategoryList.map { it.title }
+        val subCategories = viewModel.getSubCategories(categoryType)
 
         binding.autoCompleteSubCategory.apply {
-            // 어댑터 설정
-            val subCategoryAdapter = ArrayAdapter(
-                requireContext(),
-                R.layout.item_dropdown_category,
-                subCategoryTitles
-            )
-            setAdapter(subCategoryAdapter)
-            isEnabled = subCategoryTitles.isNotEmpty()
-
+            setAdapter(appContext.createDropDownAdapter(subCategories.map { it.title }))
+            isEnabled = subCategories.isNotEmpty()
             setOnItemClickListener { _, _, position, _ ->
-                val selectedSubCategory = subCategoryList[position]
-                viewModel.setSubCategory(selectedSubCategory)
+                viewModel.setSubCategory(subCategories[position])
+                validateFields()
             }
         }
     }

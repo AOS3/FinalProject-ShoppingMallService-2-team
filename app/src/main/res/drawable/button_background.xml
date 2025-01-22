@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 비활성화 상태 -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp" />
+            <solid android:color="@color/gray_button_background" />
+        </shape>
+    </item>
+
+    <!-- 활성화 상태 -->
+    <item android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp" />
+            <solid android:color="@color/brown_800" />
+
+        </shape>
+    </item>
+</selector>

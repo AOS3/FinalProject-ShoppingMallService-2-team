@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nemodream.bangkkujaengi.databinding.ItemAdminProductAddImageListBinding
+import com.nemodream.bangkkujaengi.utils.loadImage
 
 class AdminProductImageAdapter(
     private val listener: OnImageCancelClickListener,
@@ -38,7 +39,7 @@ class AdminProductImageAdapter(
         }
 
         fun bind(uri: Uri) {
-            binding.ivProductDetailContentImage.setImageURI(uri)
+            binding.ivProductDetailContentImage.loadImage(uri.toString())
         }
     }
 }

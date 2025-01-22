@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -65,3 +66,11 @@ fun Timestamp.toFormattedDate(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return dateFormat.format(toDate())
 }
+
+// 받은 리스트를 드롭다운으로 보여주는 함수
+fun Context.createDropDownAdapter(items: List<String>): ArrayAdapter<String> =
+    ArrayAdapter(
+        this,
+        R.layout.item_dropdown_category,
+        items
+    )

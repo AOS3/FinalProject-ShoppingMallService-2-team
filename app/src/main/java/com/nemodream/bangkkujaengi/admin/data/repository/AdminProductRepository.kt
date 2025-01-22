@@ -47,7 +47,7 @@ class AdminProductRepository @Inject constructor(
     /*
     * Firebase Firestore에서 데이터를 가져혼다.
     * */
-    private suspend fun getImageUrl(imagePath: String) = storage.reference
+    suspend fun getImageUrl(imagePath: String) = storage.reference
         .child(imagePath)
         .downloadUrl
         .await()
@@ -57,11 +57,55 @@ class AdminProductRepository @Inject constructor(
      * Firebase Firestore에서 상품 데이터를 모두 가져온다.
      */
     suspend fun getProducts(): List<Product> = firestore.collection("Product")
+        .whereEqualTo("delete", false)
         .get()
         .await()
         .map { document ->
-            val product = document.toObject(Product::class.java)
-            val imageUrls = product.images.map { path -> getImageUrl(path) }
-            product.copy(images = imageUrls)
+            document.toObject(Product::class.java)  // 상대 경로만 포함된 Product 반환
         }
+
+    // productId를 받아 해당 상품을 삭제한다.
+    fun deleteProduct(productId: String) {
+        // 해당 productId를 찾아 delete를 true로 변경
+        firestore.collection("Product")
+            .document(productId)
+            .update("delete", true)
+    }
+
+    suspend fun updateProduct(product: Product, newImageUris: List<Uri>): Boolean {
+        return try {
+            // 새 이미지들을 Storage에 업로드
+            val newImagePaths = newImageUris.mapIndexed { index, uri ->
+                val fileName = "product/${System.currentTimeMillis()}_${index}.jpg"
+                val imageRef = storage.reference.child(fileName)
+                imageRef.putFile(uri).await()
+                fileName
+            }
+
+            // 기존 이미지 경로와 새 이미지 경로를 합침
+            val allImagePaths = product.images + newImagePaths
+
+            // 업데이트된 Product 생성
+            val updatedProduct = product.copy(images = allImagePaths)
+
+            // Firestore 문서 업데이트
+            firestore.collection("Product")
+                .document(product.productId)
+                .set(updatedProduct)
+                .await()
+
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun getProduct(productId: String): Product =
+        firestore.collection("Product")
+            .document(productId)
+            .get()
+            .await()
+            .toObject(Product::class.java)
+            ?: throw IllegalStateException("Product not found")
 }

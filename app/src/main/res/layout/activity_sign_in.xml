@@ -5,149 +5,164 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="30dp"
     tools:context=".SignInActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/img_sign_in_logo"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_symbol" />
 
-        <ImageView
-            android:id="@+id/img_sign_in_logo"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginTop="100dp"
-            app:srcCompat="@drawable/ic_symbol" />
+    <!-- App Name -->
+    <TextView
+        android:id="@+id/tv_sign_in_app_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="방꾸쟁이"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_sign_in_logo" />
 
-        <TextView
-            android:id="@+id/tv_sign_in_app_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="방꾸쟁이"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold" />
+    <!-- App Description -->
+    <TextView
+        android:id="@+id/tv_sign_in_app_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="소개"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_sign_in_app_name" />
 
-        <TextView
-            android:id="@+id/tv_sign_in_app_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="소개"
-            android:textAlignment="center" />
+    <!-- User ID Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tf_sign_in_user_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:hint="아이디"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_sign_in_app_description">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tf_sign_in_user_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:hint="아이디"
-            app:endIconMode="clear_text">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:digits="@string/digit_value"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tf_sign_in_user_pw"
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="비밀번호"
-            app:endIconMode="password_toggle">
+            android:digits="@string/digit_value"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:digits="@string/digit_value"
-                android:inputType="text|textPassword"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <!-- Password Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tf_sign_in_user_pw"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="비밀번호"
+        app:endIconMode="password_toggle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tf_sign_in_user_id">
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:digits="@string/digit_value"
+            android:inputType="text|textPassword"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/tv_sign_in_ask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="아직 회원이 아니신가요?"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
+    <!-- Sign Up and Forgot Texts -->
+    <TextView
+        android:id="@+id/tv_sign_in_ask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="아직 회원이 아니신가요?"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tf_sign_in_user_pw" />
 
-            <TextView
-                android:id="@+id/tv_sign_in_signup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:text="회원가입"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tv_sign_in_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="회원가입"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/tv_sign_in_ask"
+        app:layout_constraintTop_toBottomOf="@id/tf_sign_in_user_pw" />
 
-            <TextView
-                android:id="@+id/tv_sign_in_forgot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:text="아이디/비밀번호 찾기"
-                android:textAlignment="viewEnd"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/tv_sign_in_forgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="아이디/비밀번호 찾기"
+        android:textAlignment="viewEnd"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tf_sign_in_user_pw" />
 
-        <Button
-            android:id="@+id/btn_sign_in_login"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:backgroundTint="#332728"
-            android:text="로그인" />
+    <!-- Login Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sign_in_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_background"
+        android:enabled="true"
+        android:text="로그인"
+        android:textColor="@drawable/button_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_sign_in_ask" />
 
-        <Button
-            android:id="@+id/btn_sign_in_kakao_login"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="#FDE200"
-            android:text="카카오 로그인"
-            android:textColor="#332728"
-            app:icon="@drawable/ic_symbol"
-            app:iconTint="#332728" />
+    <!-- Kakao Login Button -->
+    <Button
+        android:id="@+id/btn_sign_in_kakao_login"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#FDE200"
+        android:text="카카오 로그인"
+        android:textColor="#332728"
+        app:cornerRadius="6dp"
+        app:icon="@drawable/ic_symbol"
+        app:iconTint="#332728"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_sign_in_login" />
 
-        <TextView
-            android:id="@+id/tv_sign_in_guest_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="비회원으로 이용하기"
-            android:textAlignment="center"
-            android:textColor="#666060" />
-
-    </LinearLayout>
-
+    <!-- Guest Login -->
+    <TextView
+        android:id="@+id/tv_sign_in_guest_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="비회원으로 이용하기"
+        android:textAlignment="center"
+        android:textColor="#666060"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_sign_in_kakao_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

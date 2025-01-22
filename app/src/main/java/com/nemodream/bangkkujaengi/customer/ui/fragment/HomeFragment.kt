@@ -58,7 +58,8 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     * 배너 클릭 리스너
     * */
     override fun onItemClick(banner: Banner) {
-        val action = HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(banner.productId)
+        val action =
+            HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(banner.productId)
         findNavController().navigate(action)
     }
 
@@ -71,9 +72,47 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
             bannerAdapter.submitList(bannerList)
         }
 
+        viewModel.bannerLoading.observe(viewLifecycleOwner) { isLoading ->
+            with(binding) {
+                when (isLoading) {
+                    true -> {
+                        shimmerLayout.visibility = View.VISIBLE
+                        shimmerLayout.startShimmer()
+                        viewPagerCarousel.visibility = View.INVISIBLE
+                        tabIndicator.visibility = View.GONE
+                    }
+
+                    false -> {
+                        shimmerLayout.visibility = View.INVISIBLE
+                        shimmerLayout.stopShimmer()
+                        viewPagerCarousel.visibility = View.VISIBLE
+                        tabIndicator.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+
         viewModel.promotionItems.observe(viewLifecycleOwner) { items ->
             promotionAdapter.submitList(items)
         }
+
+        viewModel.promotionLoading.observe(viewLifecycleOwner) { isLoading ->
+            with(binding) {
+                when (isLoading) {
+                    true -> {
+                        shimmerLayout.startShimmer()
+                        promotionShimmerLayout.root.visibility = View.VISIBLE
+                        rvPromotion.visibility = View.GONE
+                    }
+                    false -> {
+                        shimmerLayout.startShimmer()
+                        promotionShimmerLayout.root.visibility = View.GONE
+                        rvPromotion.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+
     }
 
     /*
@@ -105,22 +144,34 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     private fun setupListeners() {
         with(binding) {
             categoryFurniture.root.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(CategoryType.FURNITURE)
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(
+                        CategoryType.FURNITURE
+                    )
                 findNavController().navigate(action)
             }
 
             categoryLighting.root.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(CategoryType.LIGHTING)
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(
+                        CategoryType.LIGHTING
+                    )
                 findNavController().navigate(action)
             }
 
             categoryFabric.root.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(CategoryType.FABRIC)
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(
+                        CategoryType.FABRIC
+                    )
                 findNavController().navigate(action)
             }
 
             categoryDeco.root.setOnClickListener {
-                val action = HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(CategoryType.DECO)
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(
+                        CategoryType.DECO
+                    )
                 findNavController().navigate(action)
             }
 
@@ -128,16 +179,19 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
             toolbarHome.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.menu_search -> {
-                        val action = HomeFragmentDirections.actionNavigationHomeToNavigationSearch()
+                        val action =
+                            HomeFragmentDirections.actionNavigationHomeToNavigationSearch()
                         findNavController().navigate(action)
                         true
                     }
 
                     R.id.menu_cart -> {
-                        val action = HomeFragmentDirections.actionNavigationHomeToNavigationCart()
+                        val action =
+                            HomeFragmentDirections.actionNavigationHomeToNavigationCart()
                         findNavController().navigate(action)
                         true
                     }
+
                     else -> false
                 }
             }
@@ -145,7 +199,8 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     }
 
     override fun onProductClick(product: Product) {
-        val action = HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(product.productId)
+        val action =
+            HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(product.productId)
         findNavController().navigate(action)
     }
 

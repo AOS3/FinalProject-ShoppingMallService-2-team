@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_admin_product_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="일반 상품 수정"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/AppToolbarTitleStyle" />
+
+        <ImageView
+            android:id="@+id/btn_product_edit_submit"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/add_24px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_product_edit_image_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="이미지"
+            android:textAppearance="@style/AppTextLabel.S14.Bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_admin_product_edit" />
+
+        <View
+            android:id="@+id/view_product_edit_image_area"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/background_gray_300_4dp"
+            app:layout_constraintStart_toStartOf="@id/tv_product_edit_image_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_edit_image_label" />
+
+        <ImageView
+            android:id="@+id/iv_product_edit_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/add_24px"
+            app:layout_constraintBottom_toBottomOf="@id/view_product_edit_image_area"
+            app:layout_constraintEnd_toEndOf="@id/view_product_edit_image_area"
+            app:layout_constraintStart_toStartOf="@id/view_product_edit_image_area"
+            app:layout_constraintTop_toTopOf="@id/view_product_edit_image_area" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_admin_product_edit_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="@id/view_product_edit_image_area"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view_product_edit_image_area"
+            app:layout_constraintTop_toTopOf="@id/view_product_edit_image_area"
+            tools:listitem="@layout/item_admin_product_add_image_list" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:hint="상품명"
+            app:endIconMode="clear_text"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_product_edit_image_area">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:hint="상품설명"
+            app:endIconMode="clear_text"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start"
+                android:inputType="textMultiLine"
+                android:minHeight="120dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_category"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:hint="카테고리"
+            app:endIconMode="dropdown_menu"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_description">
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_category"
+                style="@style/AppPopupTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_sub_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:hint="서브 카테고리"
+            app:endIconMode="dropdown_menu"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_category">
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_sub_category"
+                style="@style/AppPopupTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:hint="원가"
+            app:endIconMode="clear_text"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_sub_category"
+            app:suffixText="₩">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_discount_rate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:hint="할인율"
+            app:endIconMode="clear_text"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_price"
+            app:suffixText="%">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_discount_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:enabled="false"
+            android:hint="할인 판매가"
+            app:endIconMode="none"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_discount_rate"
+            app:suffixText="₩">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tf_admin_product_edit_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:hint="재고"
+            app:endIconMode="clear_text"
+            app:expandedHintEnabled="true"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_discount_price">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_product_edit_color_label"
+            style="@style/AppTextLabel.S14.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="색상"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tf_admin_product_edit_count" />
+
+        <ImageView
+            android:id="@+id/btn_product_edit_color"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/background_stroke_gray_300"
+            android:src="@drawable/ic_add_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_edit_color_label" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_product_edit_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="120dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_product_edit_color"
+            tools:listitem="@layout/item_admin_product_add_color" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -29,6 +29,17 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar_product_product"
         tools:listitem="@layout/item_admin_product__list" />
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/admin_product_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:indicatorColor="@color/brown_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_product_product" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_product_add"
         android:layout_width="wrap_content"

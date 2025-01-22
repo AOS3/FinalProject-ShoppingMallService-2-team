@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.nemodream.bangkkujaengi.customer.ui.fragment.findAccount.FindInfoActivity
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.SignInViewModel
 import com.nemodream.bangkkujaengi.databinding.ActivitySignInBinding
+import com.nemodream.bangkkujaengi.utils.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,6 +31,11 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // 빈 공간 터치 시 키보드 숨김 처리
+        binding.root.setOnClickListener {
+            binding.root.hideKeyboard()
+        }
+
         // 회원가입 버튼 클릭 시 회원가입 화면으로 이동
         binding.tvSignInSignup.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)

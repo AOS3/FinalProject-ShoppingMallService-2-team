@@ -3,6 +3,7 @@ package com.nemodream.bangkkujaengi.customer.ui.fragment
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,7 +97,6 @@ class ProductDetailFragment: Fragment(), OnCartClickListener {
         setupProductBannerUI()
         setupDiscountViews(product)
         with(binding) {
-
             tvProductDetailTitle.text = product.productName
             tvProductDetailPrice.text = "${product.price.toCommaString()}원"
             tvProductDetailDiscountPrice.text = "${product.saledPrice.toCommaString()}원"

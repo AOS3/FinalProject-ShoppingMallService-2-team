@@ -16,6 +16,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.SignUpViewModel
 import com.nemodream.bangkkujaengi.databinding.ActivitySignUpBinding
+import com.nemodream.bangkkujaengi.utils.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 
@@ -133,6 +134,12 @@ class SignUpActivity : AppCompatActivity() {
 
     // 입력 리스너
     private fun setupListeners() {
+        // 빈 공간 터치 시 키보드 숨김 처리
+        binding.root.setOnClickListener {
+            binding.root.hideKeyboard()
+            binding.root.clearFocus() // 포커스 제거
+        }
+
         binding.tfSignUpName.editText?.addTextChangedListener { editable ->
             signUpViewModel.name.value = editable.toString()
             signUpViewModel.validateName()
@@ -251,19 +258,15 @@ class SignUpActivity : AppCompatActivity() {
     // Firebase 전화번호 인증 요청
     private fun startPhoneNumberVerification(phoneNumber: String) {
         val options = PhoneAuthOptions.newBuilder(auth)
-            // 인증할 전화번호
-            .setPhoneNumber(phoneNumber)
-            // 타임아웃 시간
+            .setPhoneNumber(phoneNumber) // 입력된 실제 번호로 인증번호 전송
             .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(this) // 현재 액티비티
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    // 자동 인증 또는 즉시 인증 완료
                     signInWithPhoneAuthCredential(credential)
                 }
 
                 override fun onVerificationFailed(e: FirebaseException) {
-                    // 인증 실패 처리
                     showToast("인증 실패: ${e.message}")
                     Log.w("PhoneAuth", "Verification failed", e)
                 }
@@ -272,7 +275,6 @@ class SignUpActivity : AppCompatActivity() {
                     verificationId: String,
                     token: PhoneAuthProvider.ForceResendingToken
                 ) {
-                    // 인증 코드가 전송되었을 때 호출
                     storedVerificationId = verificationId
                     resendToken = token
                     showToast("인증 코드가 전송되었습니다.")

@@ -5,6 +5,7 @@
 
     <color name="blue_300">#FFDBE2F6</color>
 
+    <color name="brown_500">#FF443939</color>
     <color name="brown_800">#FF332828</color>
 
     <color name="gray_50">#FFF7F7F7</color>
@@ -13,4 +14,6 @@
     <color name="gray_300">#FFD9D9D9</color>
     <color name="gray_400">#FFC8C8C8</color>
     <color name="gray_500">#FF7F8286</color>
+    <color name="gray_button_background">#DAD3DB</color>
+    <color name="gray_button_text">#848484</color>
 </resources>

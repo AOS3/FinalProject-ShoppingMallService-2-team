@@ -27,15 +27,7 @@
             app:destination="@id/navigation_cart" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_social"
-        android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.SocialFragment"
-        android:label="SocialFragment"
-        tools:layout="@layout/fragment_social">
-        <action
-            android:id="@+id/action_navigation_social_to_socialFollowingAllFragment"
-            app:destination="@id/socialFollowingAllFragment" />
-    </fragment>
+
     <fragment
         android:id="@+id/navigation_category"
 
@@ -109,7 +101,7 @@
         android:id="@+id/orderHistoryFragment"
         android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.OrderHistoryFragment"
         android:label="fragment_order_history"
-        tools:layout="@layout/fragment_order_history" >
+        tools:layout="@layout/fragment_order_history">
 
         <action
             android:id="@+id/action_orderHistoryFragment_to_navigation_order_detail"
@@ -126,7 +118,7 @@
             app:argType="string" />
         <argument
             android:name="purchaseDateTime"
-            app:argType="string"/>
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/paymentFragment"
@@ -154,17 +146,44 @@
 
         <action
             android:id="@+id/popUpto_paymentCompletedFragment_to_HomeFragment"
-            app:popUpTo="@id/navigation_home"
-            />
+            app:popUpTo="@id/navigation_home" />
     </fragment>
-    <fragment
-        android:id="@+id/socialFollowingAllFragment"
-        android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.SocialFollowingAllFragment"
-        android:label="fragment_social_following_all"
-        tools:layout="@layout/fragment_social_following_all" />
+
     <dialog
         android:id="@+id/productOrderBottomSheetFragment"
         android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.ProductOrderBottomSheetFragment"
         android:label="ProductOrderBottomSheetFragment"
         tools:layout="@layout/fragment_product_order_bottom_sheet" />
+
+
+    <fragment
+        android:id="@+id/navigation_social"
+        android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.SocialFragment"
+        android:label="SocialFragment"
+        tools:layout="@layout/fragment_social">
+        <action
+            android:id="@+id/action_navigation_social_to_socialFollowingAllFragment"
+            app:destination="@id/socialFollowingAllFragment" />
+        <action
+            android:id="@+id/action_socialFragment_to_socialWritePictureFragment"
+            app:destination="@id/socialWritePictureFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/socialFollowingAllFragment"
+        android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.SocialFollowingAllFragment"
+        android:label="fragment_social_following_all"
+        tools:layout="@layout/fragment_social_following_all" />
+
+    <!-- Social Write Picture Fragment -->
+    <fragment
+        android:id="@+id/socialWritePictureFragment"
+        android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.SocialWritePictureFragment"
+        android:label="Social Write Picture Fragment" />
+
+    <fragment
+        android:id="@+id/navigation_my_page"
+        android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_my_page" />
 </navigation>

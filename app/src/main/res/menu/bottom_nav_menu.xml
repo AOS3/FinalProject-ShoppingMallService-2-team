@@ -9,4 +9,9 @@
         android:id="@+id/navigation_social"
         android:icon="@drawable/ic_social"
         android:title="@string/label_social" />
+
+    <item
+        android:id="@+id/navigation_my_page"
+        android:icon="@drawable/ic_person"
+        android:title="@string/label_my_page" />
 </menu>

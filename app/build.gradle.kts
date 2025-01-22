@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    // shimmer
+    implementation(libs.shimmer)
 
     // Jetpack Navigation
     implementation(libs.androidx.navigation.fragment.ktx)

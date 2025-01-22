@@ -25,7 +25,7 @@ class AdminCouponRepository @Inject constructor(
     } catch (e: Exception) {
         throw e
     }
-    
+
     // 쿠폰 삭제하기
     fun deleteCoupon(coupon: Coupon) {
         firestore.collection("Coupon").document(coupon.documentId).delete()
