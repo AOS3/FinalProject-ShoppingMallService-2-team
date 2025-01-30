@@ -1,6 +1,5 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetProfileBinding? = null
     private val binding get() = _binding!!
 
-    private var profileImageUri: String? = null
+    private var profileImageUri: String? = arguments?.getString("profileImageUri")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,7 +25,6 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupListeners()
     }
 

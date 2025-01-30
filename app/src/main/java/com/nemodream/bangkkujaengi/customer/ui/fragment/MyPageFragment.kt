@@ -66,7 +66,7 @@ class MyPageFragment : Fragment(), ProductClickListener {
                 } ?: ivMyPageProfileImage.setImageResource(R.drawable.ic_default_profile)
                 tvMyPageProfileName.text = "${member.memberNickName}님"
 
-                ivMyPageSocialKakao.visibility = when(member.socialLogin) {
+                ivMyPageSocialKakao.visibility = when (member.socialLogin) {
                     SocialLogin.KAKAO -> View.VISIBLE
                     else -> View.GONE
                 }
@@ -143,11 +143,12 @@ class MyPageFragment : Fragment(), ProductClickListener {
         with(binding) {
             // 멤버 타입에 따라 화면을 나눈다.
             viewModel.getMemberInfo(appContext.getUserId())
-            when(userType) {
+            when (userType) {
                 "member" -> {
                     groupMyPageNonMember.visibility = View.INVISIBLE
                     groupMyPageMember.visibility = View.VISIBLE
                 }
+
                 "guest" -> {
                     groupMyPageNonMember.visibility = View.VISIBLE
                     groupMyPageMember.visibility = View.INVISIBLE
@@ -177,7 +178,8 @@ class MyPageFragment : Fragment(), ProductClickListener {
             }
 
             tvMyPageNonMemberInquiry.setOnClickListener {
-                val action = MyPageFragmentDirections.actionNavigationMyPageToNavigationNonMemberOrder()
+                val action =
+                    MyPageFragmentDirections.actionNavigationMyPageToNavigationNonMemberOrder()
                 findNavController().navigate(action)
             }
 
@@ -185,26 +187,30 @@ class MyPageFragment : Fragment(), ProductClickListener {
             toolbarMyPage.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.menu_cart -> {
-                        val action = MyPageFragmentDirections.actionNavigationMyPageToNavigationCart()
+                        val action =
+                            MyPageFragmentDirections.actionNavigationMyPageToNavigationCart()
                         findNavController().navigate(action)
                         true
                     }
+
                     else -> false
                 }
             }
 
-// MyPageFragment.kt
             ivMyPageProfileImage.setOnClickListener {
-                ProfileBottomSheet().show(childFragmentManager, ProfileBottomSheet.TAG)
+                arguments = Bundle().apply {
+                    putString("profileImageUri", viewModel.memberInfo.value?.memberProfileImage)
+                    ProfileBottomSheet().show(childFragmentManager, ProfileBottomSheet.TAG)
+                }
             }
 
-            myPageOrder.root.setOnClickListener {  }
-            myPageReview.root.setOnClickListener {  }
+            myPageOrder.root.setOnClickListener { }
+            myPageReview.root.setOnClickListener { }
             myPageCoupon.root.setOnClickListener {
                 val action = MyPageFragmentDirections.actionNavigationMyPageToNavigationMyCoupon("")
                 findNavController().navigate(action)
             }
-            myPageReserve.root.setOnClickListener {  }
+            myPageReserve.root.setOnClickListener { }
             myPageBookmark.root.setOnClickListener {
                 val action = MyPageFragmentDirections.actionNavigationMyPageToMyBookmarkFragment()
                 findNavController().navigate(action)
