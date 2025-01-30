@@ -193,6 +193,10 @@ class MyPageFragment : Fragment(), ProductClickListener {
                 }
             }
 
+// MyPageFragment.kt
+            ivMyPageProfileImage.setOnClickListener {
+                ProfileBottomSheet().show(childFragmentManager, ProfileBottomSheet.TAG)
+            }
 
             myPageOrder.root.setOnClickListener {  }
             myPageReview.root.setOnClickListener {  }
