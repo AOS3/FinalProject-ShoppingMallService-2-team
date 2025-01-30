@@ -32,17 +32,15 @@ class ProductRepository @Inject constructor(
         userId: String,
     ): List<Product> {
         return try {
-            Log.d("ProductRepository", "Fetching products with category: $category, subCategory: ${subCategory.title}")
-
             // 기본 쿼리 생성
             var query = when (category) {
                 CategoryType.ALL -> {
-                    Log.d("ProductRepository", "Getting ALL products without filtering")
                     firestore.collection(COLLECTION_PRODUCTS)
+                        .whereEqualTo("delete", false)
                 }
                 else -> {
-                    Log.d("ProductRepository", "Filtering by category: ${category.name}")
                     firestore.collection(COLLECTION_PRODUCTS)
+                        .whereEqualTo("delete", false)
                         .whereEqualTo("category", category.name)
                         .let { baseQuery ->
                             if (subCategory.title != "전체") {
@@ -87,7 +85,7 @@ class ProductRepository @Inject constructor(
             images = (get("images") as? List<String>)?.map { imagePath ->
                 getImageUrl(imagePath)
             } ?: emptyList(),
-            like = isProductLiked(userId, id)  // 사용자의 좋아요 상태 확인
+            like = isProductLiked(userId, id)
         ) ?: Product()
     }
 

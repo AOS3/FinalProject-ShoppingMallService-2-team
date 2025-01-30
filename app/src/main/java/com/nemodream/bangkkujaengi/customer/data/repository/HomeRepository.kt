@@ -56,19 +56,24 @@ class HomeRepository @Inject constructor(
     /*
     * productId를 통해 Firebase의 Product Collection에서 해당 상품 데이터 가져오기
     * */
-    suspend fun getProducts(productId: String, userId: String): Product {  // userId 기본값 설정
+    suspend fun getProducts(productId: String, userId: String): Product {
         val doc = firestore.collection("Product")
             .document(productId)
             .get()
             .await()
 
-        return doc.toObject<Product>()?.copy(
-            productId = doc.id,
-            images = (doc.get("images") as? List<String>)?.map { imagePath ->
-                getImageUrl(imagePath)
-            } ?: emptyList(),
-            like = isProductLiked(userId, productId)  // 사용자의 좋아요 상태 확인
-        ) ?: Product()
+        // 문서가 존재하고 삭제되지 않은 경우에만 처리
+        return if (doc.exists() && doc.getBoolean("delete") == false) {
+            doc.toObject<Product>()?.copy(
+                productId = doc.id,
+                images = (doc.get("images") as? List<String>)?.map { imagePath ->
+                    getImageUrl(imagePath)
+                } ?: emptyList(),
+                like = isProductLiked(userId, productId)
+            ) ?: Product()
+        } else {
+            Product() // 삭제된 상품이거나 존재하지 않는 경우 빈 Product 객체 반환
+        }
     }
 
     /*
@@ -109,17 +114,6 @@ class HomeRepository @Inject constructor(
         }
 
         return sections
-    }
-
-    private suspend fun getProductsByIds(productIds: List<String>, memberId: String): List<Product> {
-        return productIds.mapNotNull { productId ->
-            try {
-                getProducts(productId, memberId)
-            } catch (e: Exception) {
-                Log.e("PromotionRepository", "Error fetching product $productId: ", e)
-                null
-            }
-        }
     }
 
     fun saveCartProduct(productId: String, quantity: Int = 1, color: String) {

@@ -67,13 +67,17 @@ class SearchRepository @Inject constructor(
     * Firebase Firestore에서 상품 데이터 가져오기
     * */
     private suspend fun DocumentSnapshot.toProduct(userId: String): Product {
-        return toObject<Product>()?.copy(
-            productId = id,
-            images = (get("images") as? List<String>)?.map { imagePath ->
-                getImageUrl(imagePath)
-            } ?: emptyList(),
-            like = isProductLiked(userId, id)  // 사용자의 좋아요 상태 확인
-        ) ?: Product()
+        return if (exists() && getBoolean("delete") == false) {
+            toObject<Product>()?.copy(
+                productId = id,
+                images = (get("images") as? List<String>)?.map { imagePath ->
+                    getImageUrl(imagePath)
+                } ?: emptyList(),
+                like = isProductLiked(userId, id)
+            ) ?: Product()
+        } else {
+            Product()
+        }
     }
 
     /* 좋아요 토글 */
