@@ -23,6 +23,7 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.ProductDetailImageAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.ProductDetailViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentProductDetailBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.getUserType
 import com.nemodream.bangkkujaengi.utils.loadImage
 import com.nemodream.bangkkujaengi.utils.toCommaString
 import dagger.hilt.android.AndroidEntryPoint
@@ -138,6 +139,8 @@ class ProductDetailFragment: Fragment(), OnCartClickListener {
                     tvProductDetailDiscountPrice.text = "${product.saledPrice.toCommaString()}원"
                     tvProductDetailDiscountRate.text = "${product.saleRate}%"
                     tvProductDetailPrice.paintFlags = tvProductDetailPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+
+                    viewDiscountBlind.visibility = if (requireContext().getUserType() == "member") View.GONE else View.VISIBLE
                 }
                 false -> {
                     tvProductDetailDiscountRate.visibility = View.GONE

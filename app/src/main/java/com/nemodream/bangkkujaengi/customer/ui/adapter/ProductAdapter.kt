@@ -1,6 +1,7 @@
 package com.nemodream.bangkkujaengi.customer.ui.adapter
 
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nemodream.bangkkujaengi.customer.data.model.Product
 import com.nemodream.bangkkujaengi.databinding.ItemProductBinding
+import com.nemodream.bangkkujaengi.utils.getUserType
 import com.nemodream.bangkkujaengi.utils.loadImage
 import com.nemodream.bangkkujaengi.utils.toCommaString
 
@@ -60,6 +62,8 @@ class ProductAdapter(
                             tvProductPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                         tvProductDiscount.visibility = View.VISIBLE
                         tvProductDiscountPrice.visibility = View.VISIBLE
+
+                        viewDiscountBlind.visibility = if (root.context.getUserType() == "member") View.GONE else View.VISIBLE
                     }
 
                     false -> {
