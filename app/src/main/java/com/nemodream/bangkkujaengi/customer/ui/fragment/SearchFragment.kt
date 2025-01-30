@@ -23,7 +23,9 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.SearchResultAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.SearchViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentSearchBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.getUserType
 import com.nemodream.bangkkujaengi.utils.hideKeyboard
+import com.nemodream.bangkkujaengi.utils.showLoginSnackbar
 import com.nemodream.bangkkujaengi.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -194,6 +196,16 @@ class SearchFragment : Fragment(), OnItemClickListener, ProductClickListener {
     }
 
     override fun onFavoriteClick(product: Product) {
-        viewModel.toggleFavorite(appContext.getUserId(), product.productId)
+        when(appContext.getUserType()) {
+            "member" -> {
+                viewModel.toggleFavorite(appContext.getUserId(), product.productId)
+            }
+            "guest" -> {
+                appContext.showLoginSnackbar(binding.root) {
+                    val action = CategoryProductFragmentDirections.actionNavigationCategoryToSignInActivity()
+                    findNavController().navigate(action)
+                }
+            }
+        }
     }
 }

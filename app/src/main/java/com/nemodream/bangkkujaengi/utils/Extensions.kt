@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -181,4 +182,14 @@ suspend fun FirebaseFirestore.isPostLiked(userId: String, postId: String): Boole
         Log.e("FirestoreExtension", "게시물 좋아요 상태확인 실패: ", e)
         false
     }
+}
+
+fun Context.showLoginSnackbar(view: View, anchorView: View? = null, action: () -> Unit) {
+    Snackbar.make(view, "로그인이 필요한 서비스입니다.", Snackbar.LENGTH_LONG)
+        .setAction("로그인") { action() }
+        .setActionTextColor(ContextCompat.getColor(this, R.color.white))
+        .apply {
+            anchorView?.let { this.anchorView = it }
+        }
+        .show()
 }

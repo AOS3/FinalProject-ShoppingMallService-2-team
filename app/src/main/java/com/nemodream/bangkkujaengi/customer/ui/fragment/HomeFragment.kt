@@ -1,5 +1,6 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,8 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.PromotionAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.HomeViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentHomeBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.getUserType
+import com.nemodream.bangkkujaengi.utils.showLoginSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,12 +31,18 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     MoreProductsClickListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var appContext: Context
 
     private val viewModel: HomeViewModel by viewModels()
     private val productStateSharedViewModel: ProductStateSharedViewModel by activityViewModels()
 
     private val bannerAdapter: HomeBannerAdapter by lazy { HomeBannerAdapter(this) }
     private val promotionAdapter: PromotionAdapter by lazy { PromotionAdapter(this, this) }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appContext = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +75,34 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     override fun onItemClick(banner: Banner) {
         val action =
             HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(banner.productId)
+        findNavController().navigate(action)
+    }
+
+    override fun onProductClick(product: Product) {
+        val action =
+            HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(product.productId)
+        findNavController().navigate(action)
+    }
+
+    override fun onFavoriteClick(product: Product) {
+        when(appContext.getUserType()) {
+            "member" -> {
+                viewModel.toggleFavorite(appContext.getUserId(), product.productId)
+            }
+            "guest" -> {
+                appContext.showLoginSnackbar(
+                    binding.root,
+                    requireActivity().findViewById(R.id.customer_bottom_navigation),
+                ) {
+                    val action = HomeFragmentDirections.actionNavigationHomeToSignInActivity()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+    }
+
+    override fun onMoreProductsClick(title: String) {
+        val action = HomeFragmentDirections.actionNavigationHomeToNavigationPromotion(title)
         findNavController().navigate(action)
     }
 
@@ -215,18 +252,4 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
         }
     }
 
-    override fun onProductClick(product: Product) {
-        val action =
-            HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(product.productId)
-        findNavController().navigate(action)
-    }
-
-    override fun onFavoriteClick(product: Product) {
-        viewModel.toggleFavorite(requireContext().getUserId(), product.productId)
-    }
-
-    override fun onMoreProductsClick(title: String) {
-        val action = HomeFragmentDirections.actionNavigationHomeToNavigationPromotion(title)
-        findNavController().navigate(action)
-    }
 }

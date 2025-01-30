@@ -1,7 +1,9 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
+import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.nemodream.bangkkujaengi.R
 import com.nemodream.bangkkujaengi.customer.data.model.CategoryType
@@ -23,12 +26,15 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.ProductGridAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.CategoryProductViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentCategoryProductBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.getUserType
+import com.nemodream.bangkkujaengi.utils.showLoginSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryProductFragment: Fragment(), ProductClickListener {
     private var _binding: FragmentCategoryProductBinding? = null
     private val binding get() = _binding!!
+    private lateinit var appContext: Context
 
     private val args: CategoryProductFragmentArgs by navArgs()
 
@@ -36,6 +42,11 @@ class CategoryProductFragment: Fragment(), ProductClickListener {
 
     private val adapter: ProductGridAdapter by lazy { ProductGridAdapter(this) }
     private val categoryType: CategoryType by lazy { args.category }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appContext = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +59,7 @@ class CategoryProductFragment: Fragment(), ProductClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setUserId(requireContext().getUserId())
+        viewModel.setUserId(appContext.getUserId())
         setupUI()
         observeViewModel()
         setupTabs()
@@ -65,7 +76,17 @@ class CategoryProductFragment: Fragment(), ProductClickListener {
     }
 
     override fun onFavoriteClick(product: Product) {
-        viewModel.toggleFavorite(requireContext().getUserId(), product.productId)
+        when(appContext.getUserType()) {
+            "member" -> {
+            viewModel.toggleFavorite(appContext.getUserId(), product.productId)
+            }
+            "guest" -> {
+                appContext.showLoginSnackbar(binding.root) {
+                    val action = CategoryProductFragmentDirections.actionNavigationCategoryToSignInActivity()
+                    findNavController().navigate(action)
+                }
+            }
+        }
     }
 
     private fun setupUI() {
@@ -159,7 +180,7 @@ class CategoryProductFragment: Fragment(), ProductClickListener {
         // 하위 카테고리가 있을 때만 칩을 생성
         if (subCategories.isNotEmpty()) {
             subCategories.forEach { subCategory ->
-                val chip = Chip(requireContext()).apply {
+                val chip = Chip(appContext).apply {
                     text = subCategory.title
                     tag = subCategory  // SubCategoryType을 tag로 저장
 
@@ -194,12 +215,12 @@ class CategoryProductFragment: Fragment(), ProductClickListener {
                     selectedChip -> {
                         // 선택된 Chip 스타일
                         chip.setChipBackgroundColorResource(R.color.black)
-                        chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                        chip.setTextColor(ContextCompat.getColor(appContext, R.color.white))
                     }
                     else -> {
                         // 선택되지 않은 Chip 스타일
                         chip.setChipBackgroundColorResource(R.color.white)
-                        chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                        chip.setTextColor(ContextCompat.getColor(appContext, R.color.black))
                         chip.typeface = Typeface.DEFAULT
                     }
                 }

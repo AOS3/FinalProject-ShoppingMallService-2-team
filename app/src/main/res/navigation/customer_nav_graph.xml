@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_cart"
             app:destination="@id/navigation_cart" />
+        <action
+            android:id="@+id/action_navigation_home_to_signInActivity"
+            app:destination="@id/signInActivity" />
     </fragment>
 
 
@@ -47,6 +50,9 @@
         <action
             android:id="@+id/action_navigation_category_to_navigation_cart"
             app:destination="@id/navigation_cart" />
+        <action
+            android:id="@+id/action_navigation_category_to_signInActivity"
+            app:destination="@id/signInActivity" />
     </fragment>
     <fragment
         android:id="@+id/navigation_product_detail"
@@ -59,6 +65,9 @@
         <action
             android:id="@+id/action_navigation_product_detail_to_navigation_cart"
             app:destination="@id/navigation_cart" />
+        <action
+            android:id="@+id/action_navigation_product_detail_to_signInActivity"
+            app:destination="@id/signInActivity" />
     </fragment>
     <fragment
         android:id="@+id/navigation_promotion"
@@ -79,6 +88,9 @@
         <action
             android:id="@+id/action_navigation_promotion_to_navigation_product_detail"
             app:destination="@id/navigation_product_detail" />
+        <action
+            android:id="@+id/action_navigation_promotion_to_signInActivity"
+            app:destination="@id/signInActivity" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search"
