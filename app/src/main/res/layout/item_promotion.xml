@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="6dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="16dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_product"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/AppRoundedImage.Medium" />
+
+    <TextView
+        android:id="@+id/tv_product_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_product" />
+
+    <TextView
+        android:id="@+id/tv_product_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/tv_product_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_name"
+        tools:text="10%" />
+
+    <TextView
+        android:id="@+id/tv_product_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/gray_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/tv_product_discount"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_name"
+        app:layout_goneMarginStart="0dp"
+        tools:text="10,000원" />
+
+    <TextView
+        android:id="@+id/tv_product_discount_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_price"
+        tools:text="9,000원" />
+
+    <TextView
+        android:id="@+id/tv_product_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/background_gray_300"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_discount_price"
+        tools:text="조명" />
+
+    <ImageView
+        android:id="@+id/btn_like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:background="@drawable/selector_background_like"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_product"
+        app:layout_constraintEnd_toEndOf="@id/iv_product" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

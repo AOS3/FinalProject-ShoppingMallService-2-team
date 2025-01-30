@@ -87,7 +87,7 @@ class PromotionAdapter(
         binding: ItemPromotionProductsBinding,
         productClickListener: ProductClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private val productAdapter = ProductAdapter(productClickListener)
+        private val productAdapter = PromotionProductAdapter(productClickListener)
 
         init {
             binding.rvProducts.adapter = productAdapter
