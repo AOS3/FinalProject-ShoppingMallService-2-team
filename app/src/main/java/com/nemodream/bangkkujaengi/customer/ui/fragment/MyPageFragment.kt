@@ -93,7 +93,7 @@ class MyPageFragment : Fragment(), ProductClickListener {
                         shimmerLayout.root.visibility = View.VISIBLE
                         shimmerLayout.root.startShimmer()
                         rvRecentViewProduct.visibility = View.INVISIBLE
-                        tvRecentViewProductLabel.visibility = View.GONE
+                        tvRecentViewProductLabel.visibility = View.INVISIBLE
                     }
 
                     false -> {
@@ -103,7 +103,7 @@ class MyPageFragment : Fragment(), ProductClickListener {
                         tvRecentViewProductLabel.visibility = View.VISIBLE
 
                         if (viewModel.recentProductList.value.isNullOrEmpty()) {
-                            tvRecentViewProductLabel.visibility = View.GONE
+                            tvRecentViewProductLabel.visibility = View.INVISIBLE
                             rvRecentViewProduct.visibility = View.INVISIBLE
                         }
                     }
