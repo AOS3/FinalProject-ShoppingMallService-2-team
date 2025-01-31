@@ -262,6 +262,8 @@
             android:id="@+id/rv_recent_view_product"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
