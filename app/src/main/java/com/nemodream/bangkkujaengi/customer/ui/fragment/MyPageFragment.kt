@@ -27,6 +27,7 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.PromotionProductAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.MyPageViewModel
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.NicknameUpdateUiState
 import com.nemodream.bangkkujaengi.databinding.FragmentMyPageBinding
+import com.nemodream.bangkkujaengi.utils.clearUserInfo
 import com.nemodream.bangkkujaengi.utils.getUserId
 import com.nemodream.bangkkujaengi.utils.getUserType
 import com.nemodream.bangkkujaengi.utils.hideKeyboard
@@ -161,11 +162,13 @@ class MyPageFragment : Fragment(), ProductClickListener {
                 "member" -> {
                     groupMyPageNonMember.visibility = View.INVISIBLE
                     groupMyPageMember.visibility = View.VISIBLE
+                    tvMyPageLogout.visibility = View.VISIBLE
                 }
 
                 "guest" -> {
                     groupMyPageNonMember.visibility = View.VISIBLE
                     groupMyPageMember.visibility = View.INVISIBLE
+                    tvMyPageLogout.visibility = View.INVISIBLE
                 }
             }
 
@@ -259,6 +262,13 @@ class MyPageFragment : Fragment(), ProductClickListener {
             }
             tvMyPageNotice.setOnClickListener {
                 appContext.showToast("준비중입니다.")
+            }
+
+            tvMyPageLogout.setOnClickListener {
+                appContext.clearUserInfo()
+                val action = MyPageFragmentDirections.actionNavigationMyPageToSignInActivity()
+                findNavController().navigate(action)
+                requireActivity().finish()
             }
         }
     }
