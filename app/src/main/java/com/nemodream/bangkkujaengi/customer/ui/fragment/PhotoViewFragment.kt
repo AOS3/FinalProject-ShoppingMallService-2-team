@@ -6,23 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.nemodream.bangkkujaengi.R
 import com.nemodream.bangkkujaengi.databinding.FragmentPhotoViewBinding
+import com.nemodream.bangkkujaengi.utils.loadImage
 
 class PhotoViewFragment: Fragment() {
     private var _binding: FragmentPhotoViewBinding? = null
     private val binding get() = _binding!!
 
-    // 상태바 색상 변경을 위한 window 객체 초기화
+    private val args: PhotoViewFragmentArgs by navArgs()
+
     private val window: Window by lazy {
         activity?.window ?: throw IllegalStateException("Activity is null")
-    }
-
-    private val profileImageUri: String? by lazy {
-        arguments?.getString("profileImageUri")
     }
 
     override fun onCreateView(
@@ -47,9 +46,6 @@ class PhotoViewFragment: Fragment() {
         _binding = null
     }
 
-    /*
-    * 상태바 색상 변경
-    * */
     private fun toggleStatusBarColor() {
         val currentColor = window.statusBarColor
         when (currentColor) {
@@ -76,8 +72,10 @@ class PhotoViewFragment: Fragment() {
 
     private fun setupUI() {
         with(binding) {
-            profileImageUri?.let {
-                ivProfileImage.setImageURI(it.toUri())
+            args.profileImageUrl?.let { url ->
+                ivProfileImage.loadImage(url)
+            } ?: run {
+                ivProfileImage.setImageResource(R.drawable.ic_default_profile)
             }
         }
     }

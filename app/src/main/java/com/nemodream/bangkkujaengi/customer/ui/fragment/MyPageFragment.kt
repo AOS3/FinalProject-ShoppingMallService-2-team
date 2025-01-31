@@ -5,7 +5,6 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +34,7 @@ class MyPageFragment : Fragment(), ProductClickListener {
     private val viewModel: MyPageViewModel by viewModels()
 
     private val adapter: PromotionProductAdapter by lazy { PromotionProductAdapter(this) }
+    private var profileImageUri: String? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,6 +63,7 @@ class MyPageFragment : Fragment(), ProductClickListener {
             with(binding) {
                 member.memberProfileImage?.let {
                     ivMyPageProfileImage.loadImage(it)
+                    profileImageUri = it
                 } ?: ivMyPageProfileImage.setImageResource(R.drawable.ic_default_profile)
                 tvMyPageProfileName.text = "${member.memberNickName}님"
 
@@ -198,10 +199,11 @@ class MyPageFragment : Fragment(), ProductClickListener {
             }
 
             ivMyPageProfileImage.setOnClickListener {
-                arguments = Bundle().apply {
-                    putString("profileImageUri", viewModel.memberInfo.value?.memberProfileImage)
-                    ProfileBottomSheet().show(childFragmentManager, ProfileBottomSheet.TAG)
-                }
+                ProfileBottomSheet().apply {
+                    arguments = Bundle().apply {
+                        putString("profileImageUri", profileImageUri)
+                    }
+                }.show(childFragmentManager, ProfileBottomSheet.TAG)
             }
 
             myPageOrder.root.setOnClickListener { }

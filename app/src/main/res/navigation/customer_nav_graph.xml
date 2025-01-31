@@ -254,6 +254,9 @@
         <action
             android:id="@+id/action_navigation_my_page_to_navigation_product_detail"
             app:destination="@id/navigation_product_detail" />
+        <action
+            android:id="@+id/action_navigation_my_page_to_photoViewFragment"
+            app:destination="@id/photoViewFragment" />
     </fragment>
     <activity
         android:id="@+id/signInActivity"
@@ -298,5 +301,15 @@
         <action
             android:id="@+id/action_navigation_my_bookmark_to_navigation_product_detail"
             app:destination="@id/navigation_product_detail" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoViewFragment"
+        android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.PhotoViewFragment"
+        tools:layout="@layout/fragment_photo_view"
+        android:label="PhotoViewFragment" >
+        <argument
+            android:name="profileImageUrl"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

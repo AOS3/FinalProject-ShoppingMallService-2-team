@@ -12,8 +12,6 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetProfileBinding? = null
     private val binding get() = _binding!!
 
-    private var profileImageUri: String? = arguments?.getString("profileImageUri")
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,10 +33,12 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
         }
 
         binding.tvProfileView.setOnClickListener {
-            val action = MyPageFragmentDirections.actionProfileBottomSheetToPhotoViewFragment(profileImageUri)
+            val profileImageUri = arguments?.getString("profileImageUri")
+            val action = MyPageFragmentDirections.actionNavigationMyPageToPhotoViewFragment(profileImageUri)
             findNavController().navigate(action)
             dismiss()
         }
+
     }
 
     override fun onDestroyView() {
