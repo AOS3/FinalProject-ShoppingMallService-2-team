@@ -12,6 +12,13 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetProfileBinding? = null
     private val binding get() = _binding!!
 
+    private var profileImageUri: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        profileImageUri = arguments?.getString("profileImageUri")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,12 +35,12 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupListeners() {
         binding.tvProfileChange.setOnClickListener {
-            // 프로필 사진 변경 처리
+            val action = MyPageFragmentDirections.actionNavigationMyPageToProfileEditFragment(profileImageUri)
+            findNavController().navigate(action)
             dismiss()
         }
 
         binding.tvProfileView.setOnClickListener {
-            val profileImageUri = arguments?.getString("profileImageUri")
             val action = MyPageFragmentDirections.actionNavigationMyPageToPhotoViewFragment(profileImageUri)
             findNavController().navigate(action)
             dismiss()
