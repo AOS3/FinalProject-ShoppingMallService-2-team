@@ -193,3 +193,17 @@ fun Context.showLoginSnackbar(view: View, anchorView: View? = null, action: () -
         }
         .show()
 }
+
+fun Context.showKeyboard(view: View) {
+    getSystemService(InputMethodManager::class.java)?.showSoftInput(
+        view,
+        InputMethodManager.SHOW_IMPLICIT
+    )
+}
+
+fun Context.hideKeyboard(view: View) {
+    getSystemService(InputMethodManager::class.java)?.hideSoftInputFromWindow(
+        view.windowToken,
+        0
+    )
+}
