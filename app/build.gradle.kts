@@ -92,6 +92,9 @@ dependencies {
 
     implementation("com.google.android.material:material:1.12.0")
 
+    // Paging 3
+    implementation(libs.androidx.paging.runtime.ktx)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
