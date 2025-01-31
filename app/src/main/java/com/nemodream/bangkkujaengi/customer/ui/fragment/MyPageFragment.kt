@@ -2,25 +2,36 @@ package com.nemodream.bangkkujaengi.customer.ui.fragment
 
 import android.content.Context
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.nemodream.bangkkujaengi.R
 import com.nemodream.bangkkujaengi.customer.data.model.Product
 import com.nemodream.bangkkujaengi.customer.data.model.SocialLogin
 import com.nemodream.bangkkujaengi.customer.ui.adapter.ProductClickListener
 import com.nemodream.bangkkujaengi.customer.ui.adapter.PromotionProductAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.MyPageViewModel
+import com.nemodream.bangkkujaengi.customer.ui.viewmodel.NicknameUpdateUiState
 import com.nemodream.bangkkujaengi.databinding.FragmentMyPageBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
 import com.nemodream.bangkkujaengi.utils.getUserType
+import com.nemodream.bangkkujaengi.utils.hideKeyboard
 import com.nemodream.bangkkujaengi.utils.loadImage
+import com.nemodream.bangkkujaengi.utils.showKeyboard
 import com.nemodream.bangkkujaengi.utils.showLoginSnackbar
 import com.nemodream.bangkkujaengi.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +67,7 @@ class MyPageFragment : Fragment(), ProductClickListener {
         setupUI()
         setupListeners()
         observeViewModel()
+        setupProfileEdit()
     }
 
     private fun observeViewModel() {
@@ -122,10 +134,11 @@ class MyPageFragment : Fragment(), ProductClickListener {
     }
 
     override fun onFavoriteClick(product: Product) {
-        when(appContext.getUserType()) {
+        when (appContext.getUserType()) {
             "member" -> {
                 viewModel.toggleFavorite(appContext.getUserId(), product.productId)
             }
+
             "guest" -> {
                 appContext.showLoginSnackbar(
                     binding.root,
@@ -184,7 +197,6 @@ class MyPageFragment : Fragment(), ProductClickListener {
                 findNavController().navigate(action)
             }
 
-            // 메뉴 선택
             toolbarMyPage.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.menu_cart -> {
@@ -204,6 +216,23 @@ class MyPageFragment : Fragment(), ProductClickListener {
                         putString("profileImageUri", profileImageUri)
                     }
                 }.show(childFragmentManager, ProfileBottomSheet.TAG)
+            }
+
+            setFragmentResultListener("updated_profile_image") { _, bundle ->
+                val profileImageUrl = bundle.getString("profile_image_url")
+                profileImageUrl?.let { url ->
+                    binding.ivMyPageProfileImage.loadImage(url)
+                }
+            }
+
+            etMyProfileNickname.setOnEditorActionListener { textView, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    textView.hideKeyboard()
+                    viewModel.updateNickname(requireContext().getUserId(), etMyProfileNickname.text.toString())
+                    true
+                } else {
+                    false
+                }
             }
 
             myPageOrder.root.setOnClickListener { }
@@ -234,4 +263,49 @@ class MyPageFragment : Fragment(), ProductClickListener {
         }
     }
 
+
+    // 수정 모드에서 일반 모드로 전환
+    private fun setupProfileEdit() {
+        with(binding) {
+            // 초기 상태 설정
+            etMyProfileNickname.visibility = View.GONE
+            btnSocialMySaveEdit.visibility = View.GONE
+
+            btnProfileNameEdit.setOnClickListener {
+                // 수정 모드로 전환
+                etMyProfileNickname.apply {
+                    setText(viewModel.memberInfo.value?.memberNickName)
+                    visibility = View.VISIBLE
+                    setPadding(8, 0, 0, 20)
+                    requestFocus()
+                    setSelection(text.length)
+                    requireContext().showKeyboard(this)
+
+                }
+                tvMyPageProfileName.visibility = View.GONE
+                btnProfileNameEdit.visibility = View.GONE
+                btnSocialMySaveEdit.visibility = View.VISIBLE
+            }
+
+            btnSocialMySaveEdit.setOnClickListener {
+                viewModel.updateNickname(requireContext().getUserId(), etMyProfileNickname.text.toString())
+                requireContext().hideKeyboard(it)
+            }
+
+            viewModel.nicknameUpdateState.observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    is NicknameUpdateUiState.Success -> {
+                        etMyProfileNickname.visibility = View.GONE
+                        tvMyPageProfileName.visibility = View.VISIBLE
+                        btnProfileNameEdit.visibility = View.VISIBLE
+                        btnSocialMySaveEdit.visibility = View.GONE
+                        Snackbar.make(root, state.message, Snackbar.LENGTH_SHORT).show()
+                    }
+                    is NicknameUpdateUiState.Error -> {
+                        Snackbar.make(root, state.message, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
 }

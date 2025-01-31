@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
             android:src="@drawable/ic_kakao_talk_logo"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/tv_my_page_hello_label"
             app:layout_constraintStart_toEndOf="@id/tv_my_page_hello_label"
             app:layout_constraintTop_toTopOf="@id/tv_my_page_hello_label" />
@@ -138,6 +138,47 @@
             app:layout_constraintStart_toStartOf="@id/tv_my_page_hello_label"
             app:layout_constraintTop_toBottomOf="@id/tv_my_page_hello_label"
             tools:text="000님" />
+
+        <EditText
+            android:id="@+id/et_my_profile_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/tv_my_page_hello_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_hello_label" />
+
+        <ImageView
+            android:id="@+id/btn_profile_name_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_edit_24px"
+            app:layout_constraintBottom_toBottomOf="@id/tv_my_page_profile_name"
+            app:layout_constraintStart_toEndOf="@id/tv_my_page_profile_name"
+            app:layout_constraintTop_toTopOf="@id/tv_my_page_profile_name" />
+
+        <Button
+            android:id="@+id/btn_social_my_save_edit"
+            style="@style/FollowingButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="2dp"
+            android:text="완료"
+            android:textSize="9sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/et_my_profile_nickname"
+            app:layout_constraintStart_toEndOf="@id/et_my_profile_nickname"
+            app:layout_constraintTop_toTopOf="@id/et_my_profile_nickname" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/my_page_container"
@@ -203,7 +244,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            app:constraint_referenced_ids="iv_my_page_profile_image, tv_my_page_hello_label, iv_my_page_social_kakao, tv_my_page_profile_name, my_page_container" />
+            app:constraint_referenced_ids="iv_my_page_profile_image, tv_my_page_hello_label, tv_my_page_profile_name, my_page_container, btn_profile_name_edit, et_my_profile_nickname" />
 
         <TextView
             android:id="@+id/tv_recent_view_product_label"

@@ -43,7 +43,7 @@ class MyPageRepository @Inject constructor(
                     ?.copy(like = isProductLiked(userId, productId))
             }
 
-            products.subList(0, minOf(products.size, 7))
+            products.subList(0, minOf(products.size, 7)).reversed()
         } catch (e: Exception) {
             emptyList()
         }
@@ -123,6 +123,29 @@ class MyPageRepository @Inject constructor(
         } catch (e: Exception) {
             Log.e("HomeRepository", "좋아요 상태변경 실패: ", e)
             false
+        }
+    }
+
+    // 닉네임 수정
+    suspend fun updateNickname(userId: String, updatedNickname: String): Result<Unit> {
+        return try {
+            val existingUser = firestore.collection("Member")
+                .whereEqualTo("memberNickName", updatedNickname)
+                .get()
+                .await()
+
+            if (!existingUser.isEmpty) {
+                return Result.failure(Exception("이미 사용 중인 닉네임입니다."))
+            }
+
+            firestore.collection("Member")
+                .document(userId)
+                .update("memberNickName", updatedNickname)
+                .await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

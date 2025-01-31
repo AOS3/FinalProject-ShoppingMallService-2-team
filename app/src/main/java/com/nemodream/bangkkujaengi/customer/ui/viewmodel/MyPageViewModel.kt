@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nemodream.bangkkujaengi.customer.data.model.Member
 import com.nemodream.bangkkujaengi.customer.data.model.Product
-import com.nemodream.bangkkujaengi.customer.data.model.PromotionProducts
 import com.nemodream.bangkkujaengi.customer.data.repository.MyPageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -29,6 +28,8 @@ class MyPageViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _nicknameUpdateState = MutableLiveData<NicknameUpdateUiState>()
+    val nicknameUpdateState: LiveData<NicknameUpdateUiState> = _nicknameUpdateState
 
     // 멤버 정보 가져오기
     fun getMemberInfo(memberDocId: String) = viewModelScope.launch {
@@ -81,4 +82,23 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
+    // 닉네임 수정
+    fun updateNickname(userId: String, editedNickname: String) = viewModelScope.launch {
+        repository.updateNickname(userId, editedNickname)
+            .onSuccess {
+                _memberInfo.value = _memberInfo.value?.copy(memberNickName = editedNickname)
+                _nicknameUpdateState.value = NicknameUpdateUiState.Success()
+            }
+            .onFailure { exception ->
+                _nicknameUpdateState.value = NicknameUpdateUiState.Error(
+                    exception.message ?: "닉네임 변경에 실패했습니다."
+                )
+            }
+    }
+
+}
+
+sealed class NicknameUpdateUiState {
+    data class Success(val message: String = "닉네임이 변경되었습니다.") : NicknameUpdateUiState()
+    data class Error(val message: String) : NicknameUpdateUiState()
 }
