@@ -253,7 +253,8 @@ class SocialWritePictureFragment : Fragment() {
                                 imageList = imageUrls, // 이미지 Uri를 문자열로 변환
                                 productTagPinList = productTagPinList,
                                 savedCount = 0, // 초기값
-                                commentCount = 0 // 초기값
+                                commentCount = 0, // 초기값
+                                createdAt = com.google.firebase.Timestamp.now()
                             )
 
                             // Firestore에 게시글 저장

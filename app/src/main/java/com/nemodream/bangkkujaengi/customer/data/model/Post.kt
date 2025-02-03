@@ -1,5 +1,7 @@
 package com.nemodream.bangkkujaengi.customer.data.model
 
+import com.google.firebase.Timestamp
+
 data class Post(
     // 게시글 고유 아이디
     val id: String = "",
@@ -16,15 +18,13 @@ data class Post(
     // 게시 사진들
     val imageList: List<String> = emptyList(),
     // 사진 위 태그들
-    val productTagPinList : List<Tag> = emptyList(),
+    val productTagPinList: List<Tag> = emptyList(),
     // 저장됨 수
     val savedCount: Int = 0,
     // 댓글 수
     val commentCount: Int = 0,
-    // 랭킹 정보 (1, 2, 3등) 추가
-    val rank: Int? = null
-
-    // val createAt: Long = System.currentMillis(), 게시글 작성일시
-    // isDelete: Boolean = false
-    // val createAt: Long = System.currentMillis()
+    // 랭킹 정보 (1, 2, 3등)
+    val rank: Int? = null,
+    // 최신순 정렬을 위한 필드
+    val createdAt: Timestamp? = null
 )
