@@ -113,24 +113,24 @@ class AdminOrderViewModel(
         }
     }
 
-    // 배송 상태 업데이트 (documentId 사용)
-    fun updateOrderToShipping(order: Order, currentTabState: OrderState) {
+    fun updateOrderToShipping(
+        order: Order,
+        deliveryStatus: String,
+        deliveryStartDate: String,
+        invoiceNumber: String
+    ) {
         viewModelScope.launch {
             try {
-                val deliveryStartDate = getCurrentTime()
-                val invoiceNumber = generateInvoiceNumber()
-
                 repository.updateOrderShippingDetails(
                     documentId = order.documentId,
-                    deliveryStatus = "배송중",
+                    deliveryStatus = deliveryStatus,
                     deliveryStartDate = deliveryStartDate,
                     invoiceNumber = invoiceNumber,
                     deliveryDate = "--"
                 )
 
-                _orders.value = _orders.value?.filterNot {
-                    it.documentId == order.documentId && currentTabState != OrderState.SHIPPING
-                }
+                // 목록에서 해당 주문 제거
+                _orders.value = _orders.value?.filterNot { it.documentId == order.documentId }
             } catch (e: Exception) {
                 _errorMessage.value = "배송 상태 업데이트에 실패했습니다."
             }
@@ -140,10 +140,6 @@ class AdminOrderViewModel(
     private fun getCurrentTime(): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         return dateFormat.format(Date())
-    }
-
-    private fun generateInvoiceNumber(): String {
-        return "INV-${System.currentTimeMillis()}"
     }
 
     fun updateCheckboxState() {

@@ -17,6 +17,7 @@ import com.nemodream.bangkkujaengi.admin.data.model.OrderState
 import com.nemodream.bangkkujaengi.admin.ui.adapter.AdminOrderAdapter
 import com.nemodream.bangkkujaengi.admin.ui.adapter.OrderViewType
 import com.nemodream.bangkkujaengi.admin.ui.custom.CustomCanceledDialog
+import com.nemodream.bangkkujaengi.admin.ui.custom.CustomTextFieldDialog
 import com.nemodream.bangkkujaengi.admin.ui.viewmodel.AdminOrderViewModel
 import com.nemodream.bangkkujaengi.customer.ui.custom.CustomDialog
 
@@ -129,37 +130,51 @@ abstract class BaseAdminOrderFragment : Fragment() {
 
         prepareSelectionTextView.setOnClickListener {
             if (hasSelection) {
-                val action = when (viewType) {
-                    OrderViewType.PAYMENT_COMPLETED -> "준비 상태로"
-                    OrderViewType.PRODUCT_READY -> "배송 상태로"
-                    else -> ""
-                }
+                val selectedOrders = viewModel.getSelectedOrders()
 
-                showConfirmationDialog(
-                    message = "$selectedCount 건의 상품을 $action 변경하시겠습니까?",
-                    onConfirmAction = {
-                        val selectedOrders = viewModel.getSelectedOrders()
-
-                        when (viewType) {
-                            OrderViewType.PAYMENT_COMPLETED -> {
-                                selectedOrders.forEach {
-                                    viewModel.updateOrderState(it, OrderState.PRODUCT_READY, orderState)
-                                }
+                // OrderViewType에 따라 다이얼로그 사용 구분
+                if (viewType == OrderViewType.PRODUCT_READY) {
+                    // 송장 번호 입력 다이얼로그
+                    CustomTextFieldDialog(
+                        context = requireContext(),
+                        message = "송장 번호를 입력하세요.",
+                        hint = "송장 번호 입력",
+                        onConfirm = { inputText ->
+                            val invoiceNumber = inputText.trim()
+                            if (invoiceNumber.isEmpty()) {
+                                Toast.makeText(requireContext(), "송장 번호를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                                return@CustomTextFieldDialog
                             }
 
-                            OrderViewType.PRODUCT_READY -> {
-                                selectedOrders.forEach {
-                                    viewModel.updateOrderToShipping(it, orderState)
-                                }
+                            val deliveryStartDate = getCurrentTime()
+
+                            selectedOrders.forEach { order ->
+                                viewModel.updateOrderToShipping(
+                                    order = order,
+                                    deliveryStatus = "배송중",
+                                    deliveryStartDate = deliveryStartDate,
+                                    invoiceNumber = invoiceNumber
+                                )
                             }
 
-                            else -> return@showConfirmationDialog
+                            resetCheckboxes()
+                            Toast.makeText(requireContext(), "선택된 주문이 배송 상태로 변경되었습니다.", Toast.LENGTH_SHORT).show()
+                        },
+                        onCancel = {}
+                    ).show()
+                } else {
+                    // 기존 다이얼로그 사용
+                    showConfirmationDialog(
+                        message = "$selectedCount 건의 상품을 준비 상태로 변경하시겠습니까?",
+                        onConfirmAction = {
+                            selectedOrders.forEach {
+                                viewModel.updateOrderState(it, OrderState.PRODUCT_READY, orderState)
+                            }
+                            resetCheckboxes()
+                            Toast.makeText(requireContext(), "선택된 주문이 준비 상태로 변경되었습니다.", Toast.LENGTH_SHORT).show()
                         }
-
-                        resetCheckboxes()
-                        Toast.makeText(requireContext(), "선택된 주문이 $action 변경되었습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                )
+                    )
+                }
             }
         }
     }
@@ -240,6 +255,12 @@ abstract class BaseAdminOrderFragment : Fragment() {
         prepareText?.let { prepareSelectionTextView.text = it }
         headerCheckbox.isEnabled = checkboxEnabled
     }
+
+    private fun getCurrentTime(): String {
+        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
+        return dateFormat.format(java.util.Date())
+    }
+
 
     open fun refreshOrders() {
         viewModel.loadOrders(orderState)
