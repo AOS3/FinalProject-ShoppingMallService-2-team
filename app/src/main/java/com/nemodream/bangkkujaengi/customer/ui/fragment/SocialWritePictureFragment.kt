@@ -41,6 +41,8 @@ class SocialWritePictureFragment : Fragment() {
     // Firebase Firestore와 FirebaseAuth 초기화
     private val firestore = FirebaseFirestore.getInstance()
 
+    // 게시 중인지 여부
+    private var isPosting = false
 
     private val carouselAdapter: SocialCarouselAdapter by lazy {
         SocialCarouselAdapter(selectedPhotos) { position, x, y ->
@@ -228,6 +230,8 @@ class SocialWritePictureFragment : Fragment() {
             }
 
             binding.btnPost.setOnClickListener {
+                if (isPosting) return@setOnClickListener // 중복 클릭 방지
+
                 val title = binding.tfWriteTitle.text.toString()
                 val content = binding.tfWriteContent.text.toString()
 
@@ -235,6 +239,9 @@ class SocialWritePictureFragment : Fragment() {
                     Toast.makeText(context, "제목, 내용, 사진을 모두 입력해주세요.", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
+
+                isPosting = true // 게시 중 상태 변경
+                showProgress(true)
 
                 // 이미지 업로드 후 Firestore에 게시글 저장
                 uploadImagesAndCreatePost(selectedPhotos) { imageUrls ->
@@ -271,11 +278,23 @@ class SocialWritePictureFragment : Fragment() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
+                                .addOnCompleteListener {
+                                    isPosting = false
+                                    showProgress(false)
+                                }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun showProgress(show: Boolean) {
+        binding.flSocialWritePicturePosting.visibility = View.VISIBLE
+        binding.progressSocialWritePicturePosting.visibility = View.VISIBLE
+        binding.tvSocialWritePicturePosting.visibility = View.VISIBLE
+        binding.btnPost.isEnabled = !show // 버튼 비활성화
+        binding.root.isClickable = show // 화면 터치 방지
     }
 
     // 태그와 라벨 클릭 리스너
