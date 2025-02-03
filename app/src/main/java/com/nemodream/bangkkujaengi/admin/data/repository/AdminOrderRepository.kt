@@ -1,10 +1,9 @@
 package com.nemodream.bangkkujaengi.admin.data.repository
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 import com.nemodream.bangkkujaengi.admin.data.model.Order
 import com.nemodream.bangkkujaengi.admin.data.model.OrderState
-import com.nemodream.bangkkujaengi.customer.data.model.Purchase
 import kotlinx.coroutines.tasks.await
 
 class AdminOrderRepository {
@@ -21,11 +20,14 @@ class AdminOrderRepository {
             snapshot.documents.mapNotNull { doc ->
                 val data = doc.data
                 if (data != null) {
+                    Log.d("FetchOrders", "문서 ID: ${doc.id}")
+
                     Order(
+                        documentId = doc.id,
                         orderDate = data["purchaseDateTime"] as? String ?: data["purchaseDate"].toString(),
                         productName = data["productTitle"] as? String ?: "알 수 없음",
                         customerId = data["memberId"] as? String ?: "알 수 없음",
-                        orderNumber = data["purchaseInvoiceNumber"].toString(),
+                        orderNumber = data["purchaseId"] as? String ?: "알 수 없음",
                         deliveryStatus = data["deliveryStatus"] as? String,
                         invoiceNumber = data["invoiceNumber"].toString(),
                         deliveryStartDate = data["deliveryStartDate"] as? String ?: "알 수 없음",
@@ -36,15 +38,15 @@ class AdminOrderRepository {
                         state = mapPurchaseStateToOrderState(data["purchaseState"] as? String ?: "결제 완료")
                     )
                 } else {
+                    Log.w("FetchOrders", "문서 ID: ${doc.id}의 데이터가 null입니다.")
                     null
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            emptyList() // 실패 시 빈 리스트 반환
+            emptyList()
         }
     }
-
 
     private fun mapPurchaseStateToOrderState(purchaseState: String): OrderState {
         return when (purchaseState) {
@@ -53,23 +55,16 @@ class AdminOrderRepository {
             "배송 중" -> OrderState.SHIPPING
             "구매 확정" -> OrderState.PURCHASE_CONFIRMED
             "취소됨" -> OrderState.CANCELED
-            else -> OrderState.PAYMENT_COMPLETED // 기본 상태
+            else -> OrderState.PAYMENT_COMPLETED
         }
     }
 
-    suspend fun updateOrderState(orderNumber: String, newState: String) {
+    suspend fun updateOrderState(documentId: String, newState: String) {
         try {
-            val query = firestore.collection("Purchase")
-                .whereEqualTo("purchaseInvoiceNumber", orderNumber.toLong())
-                .get()
+            firestore.collection("Purchase").document(documentId)
+                .update("purchaseState", newState)
                 .await()
-
-            if (query.documents.isNotEmpty()) {
-                val document = query.documents.first()
-                firestore.collection("Purchase").document(document.id)
-                    .update("purchaseState", newState)
-                    .await()
-            }
+            Log.d("UpdateOrderState", "문서 ID: $documentId 상태가 $newState 로 업데이트되었습니다.")
         } catch (e: Exception) {
             e.printStackTrace()
             throw Exception("주문 상태를 업데이트하는 데 실패했습니다.")
@@ -77,28 +72,21 @@ class AdminOrderRepository {
     }
 
     suspend fun updateOrderCancellation(
-        orderNumber: String,
+        documentId: String,
         cancelDate: String,
         canceledBy: String,
         cancellationReason: String
     ) {
         try {
-            val query = firestore.collection("Purchase")
-                .whereEqualTo("purchaseInvoiceNumber", orderNumber.toLong())
-                .get()
-                .await()
-
-            if (query.documents.isNotEmpty()) {
-                val document = query.documents.first()
-                firestore.collection("Purchase").document(document.id).update(
-                    mapOf(
-                        "purchaseState" to OrderState.CANCELED,
-                        "cancelDate" to cancelDate,
-                        "canceledBy" to canceledBy,
-                        "cancellationReason" to cancellationReason
-                    )
-                ).await()
-            }
+            firestore.collection("Purchase").document(documentId).update(
+                mapOf(
+                    "purchaseState" to OrderState.CANCELED.name,
+                    "cancelDate" to cancelDate,
+                    "canceledBy" to canceledBy,
+                    "cancellationReason" to cancellationReason
+                )
+            ).await()
+            Log.d("UpdateOrderCancellation", "문서 ID: $documentId 취소 상태로 업데이트되었습니다.")
         } catch (e: Exception) {
             e.printStackTrace()
             throw Exception("취소 상태 업데이트에 실패했습니다.")
@@ -106,30 +94,23 @@ class AdminOrderRepository {
     }
 
     suspend fun updateOrderShippingDetails(
-        orderNumber: String,
+        documentId: String,
         deliveryStatus: String,
         deliveryStartDate: String,
         invoiceNumber: String,
         deliveryDate: String
     ) {
         try {
-            val query = firestore.collection("Purchase")
-                .whereEqualTo("purchaseInvoiceNumber", orderNumber.toLong())
-                .get()
-                .await()
-
-            if (query.documents.isNotEmpty()) {
-                val document = query.documents.first()
-                firestore.collection("Purchase").document(document.id).update(
-                    mapOf(
-                        "purchaseState" to OrderState.SHIPPING.name,
-                        "deliveryStatus" to deliveryStatus,
-                        "deliveryStartDate" to deliveryStartDate,
-                        "invoiceNumber" to invoiceNumber,
-                        "deliveryDate" to deliveryDate
-                    )
-                ).await()
-            }
+            firestore.collection("Purchase").document(documentId).update(
+                mapOf(
+                    "purchaseState" to OrderState.SHIPPING.name,
+                    "deliveryStatus" to deliveryStatus,
+                    "deliveryStartDate" to deliveryStartDate,
+                    "invoiceNumber" to invoiceNumber,
+                    "deliveryDate" to deliveryDate
+                )
+            ).await()
+            Log.d("UpdateOrderShippingDetails", "문서 ID: $documentId 배송 정보가 업데이트되었습니다.")
         } catch (e: Exception) {
             e.printStackTrace()
             throw Exception("배송 상태 업데이트에 실패했습니다.")

@@ -1,6 +1,7 @@
 package com.nemodream.bangkkujaengi.admin.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.TextView
@@ -39,9 +40,9 @@ abstract class BaseAdminOrderFragment : Fragment() {
             viewType = viewType,
             onActionClick = { order -> handleNextState(order) },
             onCancelClick = { order -> handleCancel(order) },
-            isOrderSelected = { orderNumber -> viewModel.isOrderSelected(orderNumber) },
-            onOrderCheckedChange = { orderNumber, isChecked ->
-                viewModel.updateOrderSelection(orderNumber, isChecked)
+            isOrderSelected = { documentId -> viewModel.isOrderSelected(documentId) },
+            onOrderCheckedChange = { documentId, isChecked ->
+                viewModel.updateOrderSelection(documentId, isChecked)
             }
         )
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -55,13 +56,11 @@ abstract class BaseAdminOrderFragment : Fragment() {
         }
 
         viewModel.headerCheckboxState.observe(viewLifecycleOwner) { state ->
-            // 헤더 체크박스 상태 변경 시 UI 업데이트
             val headerCheckbox = view?.findViewById<MaterialCheckBox>(R.id.cb_order_pc_header)
             headerCheckbox?.checkedState = state
         }
 
         viewModel.selectedItemCount.observe(viewLifecycleOwner) { count ->
-            // 선택된 항목 수에 따라 헤더의 동작 버튼 업데이트
             val cancelSelectionTextView = view?.findViewById<TextView>(R.id.tv_order_pc_cancel_selection)
             val prepareSelectionTextView = view?.findViewById<TextView>(R.id.tv_order_pc_prepare_selection)
 
@@ -77,11 +76,9 @@ abstract class BaseAdminOrderFragment : Fragment() {
         recyclerView: RecyclerView
     ) {
         checkbox.setOnCheckedChangeListener { _, isChecked ->
-            // 헤더 체크박스 상태에 따라 ViewModel 업데이트 호출
+            Log.d("HeaderCheckbox", "Header checkbox clicked. isChecked: $isChecked")
             viewModel.toggleSelectAllOrders(isChecked)
-
-            // 어댑터 강제 갱신
-            orderAdapter.notifyDataSetChanged() // 이 코드가 없으면 뷰가 갱신되지 않을 수 있음
+            recyclerView.post { orderAdapter.notifyDataSetChanged() }
         }
     }
 
@@ -107,11 +104,9 @@ abstract class BaseAdminOrderFragment : Fragment() {
     ) {
         val hasSelection = selectedCount > 0
 
-        // 버튼 활성화/비활성화
         cancelSelectionTextView.isEnabled = hasSelection
         prepareSelectionTextView.isEnabled = hasSelection
 
-        // 선택 취소 클릭 이벤트
         cancelSelectionTextView.setOnClickListener {
             if (hasSelection) {
                 val reasons = listOf("재고 부족", "가격 오류", "주문 정보 오류", "결제 오류", "기타")
@@ -120,16 +115,11 @@ abstract class BaseAdminOrderFragment : Fragment() {
                     message = "$selectedCount 건의 상품을 취소하시겠습니까?",
                     reasons = reasons,
                     onConfirm = { selectedReason ->
-                        // 선택된 주문들을 취소 상태로 변경
                         val selectedOrders = viewModel.getSelectedOrders()
                         selectedOrders.forEach { order ->
-                            // 현재 탭 상태 전달하여 취소 후 목록에서 제거
                             viewModel.handleCancel(order, canceledBy = "관리자", cancellationReason = selectedReason, currentTabState = orderState)
                         }
-
-                        // 체크박스 상태 초기화
                         resetCheckboxes()
-
                         Toast.makeText(requireContext(), "선택된 주문이 취소되었습니다.", Toast.LENGTH_SHORT).show()
                     },
                     onCancel = {}
@@ -137,8 +127,6 @@ abstract class BaseAdminOrderFragment : Fragment() {
             }
         }
 
-
-        // 선택 준비/배송 클릭 이벤트
         prepareSelectionTextView.setOnClickListener {
             if (hasSelection) {
                 val action = when (viewType) {
@@ -150,18 +138,15 @@ abstract class BaseAdminOrderFragment : Fragment() {
                 showConfirmationDialog(
                     message = "$selectedCount 건의 상품을 $action 변경하시겠습니까?",
                     onConfirmAction = {
-                        // 선택된 주문들을 상태에 따라 변경
                         val selectedOrders = viewModel.getSelectedOrders()
 
                         when (viewType) {
-                            // 결제 완료 상태에서 준비 상태로 변경
                             OrderViewType.PAYMENT_COMPLETED -> {
                                 selectedOrders.forEach {
                                     viewModel.updateOrderState(it, OrderState.PRODUCT_READY, orderState)
                                 }
                             }
 
-                            // 상품 준비 상태에서 배송 상태로 변경
                             OrderViewType.PRODUCT_READY -> {
                                 selectedOrders.forEach {
                                     viewModel.updateOrderToShipping(it, orderState)
@@ -171,9 +156,7 @@ abstract class BaseAdminOrderFragment : Fragment() {
                             else -> return@showConfirmationDialog
                         }
 
-                        // 체크박스 상태 초기화
                         resetCheckboxes()
-
                         Toast.makeText(requireContext(), "선택된 주문이 $action 변경되었습니다.", Toast.LENGTH_SHORT).show()
                     }
                 )
@@ -181,26 +164,20 @@ abstract class BaseAdminOrderFragment : Fragment() {
         }
     }
 
-    // 체크박스 상태 초기화
     private fun resetCheckboxes() {
         val headerCheckbox = view?.findViewById<MaterialCheckBox>(R.id.cb_order_pc_header)
         headerCheckbox?.isChecked = false
-
-        // 선택된 아이템 목록 초기화
         viewModel.clearSelectedOrders()
         viewModel.updateCheckboxState()
     }
 
-    // 헤더 텍스트 설정
     protected open fun setupHeaderText(
         orderDateHeader: String,
         deliveryStatusHeader: String? = null,
         invoiceNumberHeader: String? = null,
         deliveryDateHeader: String? = null
     ) {
-        // 헤더 텍스트를 동적으로 설정
-        view?.findViewById<TextView>(R.id.tv_order_pc_order_date_header)?.text =
-            orderDateHeader
+        view?.findViewById<TextView>(R.id.tv_order_pc_order_date_header)?.text = orderDateHeader
 
         view?.findViewById<TextView>(R.id.tv_order_pc_order_delivery_status)?.apply {
             text = deliveryStatusHeader
@@ -218,7 +195,6 @@ abstract class BaseAdminOrderFragment : Fragment() {
         }
     }
 
-    // 헤더 버튼 설정
     protected open fun setupHeaderTextAndActions(
         cancelSelectionTextView: TextView,
         prepareSelectionTextView: TextView,
@@ -226,45 +202,19 @@ abstract class BaseAdminOrderFragment : Fragment() {
     ) {
         when (viewType) {
             OrderViewType.PAYMENT_COMPLETED -> {
-                configureHeaderButtons(
-                    cancelSelectionTextView = cancelSelectionTextView,
-                    prepareSelectionTextView = prepareSelectionTextView,
-                    headerCheckbox = headerCheckbox,
-                    cancelVisible = true,
-                    prepareVisible = true,
-                    prepareText = "선택준비",
-                    checkboxEnabled = true
-                )
+                configureHeaderButtons(cancelSelectionTextView, prepareSelectionTextView, headerCheckbox, true, true, "선택준비", true)
             }
 
             OrderViewType.PRODUCT_READY -> {
-                configureHeaderButtons(
-                    cancelSelectionTextView = cancelSelectionTextView,
-                    prepareSelectionTextView = prepareSelectionTextView,
-                    headerCheckbox = headerCheckbox,
-                    cancelVisible = false,
-                    prepareVisible = true,
-                    prepareText = "선택배송",
-                    checkboxEnabled = true
-                )
+                configureHeaderButtons(cancelSelectionTextView, prepareSelectionTextView, headerCheckbox, false, true, "선택배송", true)
             }
 
-            OrderViewType.SHIPPING,
-            OrderViewType.PURCHASE_CONFIRMED,
-            OrderViewType.CANCELED -> {
-                configureHeaderButtons(
-                    cancelSelectionTextView = cancelSelectionTextView,
-                    prepareSelectionTextView = prepareSelectionTextView,
-                    headerCheckbox = headerCheckbox,
-                    cancelVisible = false,
-                    prepareVisible = false,
-                    checkboxEnabled = false
-                )
+            OrderViewType.SHIPPING, OrderViewType.PURCHASE_CONFIRMED, OrderViewType.CANCELED -> {
+                configureHeaderButtons(cancelSelectionTextView, prepareSelectionTextView, headerCheckbox, false, false, null, false)
             }
         }
     }
 
-    // 확인 다이얼로그 표시
     private fun showConfirmationDialog(message: String, onConfirmAction: () -> Unit) {
         CustomDialog(
             context = requireContext(),
@@ -276,7 +226,6 @@ abstract class BaseAdminOrderFragment : Fragment() {
         ).show()
     }
 
-    // 헤더 버튼 구성
     private fun configureHeaderButtons(
         cancelSelectionTextView: TextView,
         prepareSelectionTextView: TextView,
@@ -292,7 +241,6 @@ abstract class BaseAdminOrderFragment : Fragment() {
         headerCheckbox.isEnabled = checkboxEnabled
     }
 
-    // 주문 목록 새로고침
     open fun refreshOrders() {
         viewModel.loadOrders(orderState)
     }
@@ -301,4 +249,3 @@ abstract class BaseAdminOrderFragment : Fragment() {
 
     abstract fun handleCancel(order: Order)
 }
-
