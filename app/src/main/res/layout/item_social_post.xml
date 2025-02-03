@@ -37,18 +37,6 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- 하트 이모티콘 (썸네일 이미지 우측 하단에 배치) -->
-        <ImageButton
-            android:id="@+id/btn_like"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_alignBottom="@id/iv_social_post_item_thumbnail"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="3dp"
-            android:src="@drawable/ic_like_unselected" />
-
 
         <!-- 제목 및 기타 정보 -->
         <LinearLayout
