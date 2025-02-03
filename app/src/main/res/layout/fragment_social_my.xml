@@ -23,7 +23,6 @@
             android:layout_height="70dp"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/tmp_profile_pricture_24px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="닉네임1"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="#000000"
@@ -55,16 +53,16 @@
             app:layout_constraintStart_toEndOf="@id/iv_my_profile_image"
             app:layout_constraintTop_toTopOf="@id/iv_my_profile_image" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_social_my_edit"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:src="@drawable/ic_edit_24px"
-            app:layout_constraintStart_toEndOf="@id/tv_my_profile_nickname"
-            app:layout_constraintTop_toTopOf="@id/tv_my_profile_nickname"
-            app:layout_constraintBottom_toBottomOf="@id/tv_my_profile_nickname" />
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:id="@+id/iv_social_my_edit"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginTop="3dp"-->
+<!--            android:src="@drawable/ic_edit_24px"-->
+<!--            app:layout_constraintStart_toEndOf="@id/tv_my_profile_nickname"-->
+<!--            app:layout_constraintTop_toTopOf="@id/tv_my_profile_nickname"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/tv_my_profile_nickname" />-->
 
         <!-- 수정완료 버튼 -->
         <Button
@@ -91,8 +89,7 @@
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@id/iv_my_profile_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="팔로잉 00명   팔로워 00명" />
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- 내가쓴글 / 저장됨 -->

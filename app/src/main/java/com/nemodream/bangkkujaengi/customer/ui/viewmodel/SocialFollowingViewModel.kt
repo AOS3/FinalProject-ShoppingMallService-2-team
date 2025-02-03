@@ -1,12 +1,18 @@
 package com.nemodream.bangkkujaengi.customer.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.nemodream.bangkkujaengi.customer.data.model.Member
 import com.nemodream.bangkkujaengi.customer.data.model.Post
 import com.nemodream.bangkkujaengi.customer.data.repository.SocialFollowingRepository
+import com.nemodream.bangkkujaengi.utils.getUserId
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,19 +39,29 @@ class SocialFollowingViewModel @Inject constructor(
     private val _isFollowing = MutableLiveData<Boolean>()
     val isFollowing: LiveData<Boolean> get() = _isFollowing
 
-    // 팔로잉 멤버 목록 로드
-    fun loadFollowingMembers() {
-        val members = repository.getFollowingMembers() // 데이터베이스나 API에서 데이터 가져옴
-        _followingMembers.value = members
+    // Firebase Firestore와 FirebaseAuth 초기화
+    private val firestore = FirebaseFirestore.getInstance()
 
-        // 각 멤버의 초기 팔로잉 상태를 true로 설정
-        members.forEach { member ->
-            followingStates[member.id] = true
-        }
 
-        // 첫 번째 멤버를 기본 선택
-        if (members.isNotEmpty()) {
-            selectMember(members.first())
+    // 내 팔로잉 목록 업데이트
+    fun loadFollowingMembers(memberDocId: String) = viewModelScope.launch {
+        runCatching {
+            repository.getFollowingMembers(memberDocId)
+        }.onSuccess {
+            _followingMembers.value = it
+
+            // 각 멤버의 초기 팔로잉 상태를 true로 설정
+            it.forEach { member ->
+                followingStates[member.id] = true
+            }
+
+            // 첫 번째 멤버를 기본 선택
+            if (it.isNotEmpty()) {
+                selectMember(it.first())
+            }
+
+        }.onFailure {
+            it.printStackTrace()
         }
     }
 
@@ -57,7 +73,7 @@ class SocialFollowingViewModel @Inject constructor(
     }
 
     // 선택된 멤버의 팔로잉 상태를 반전 및 업데이트
-    fun toggleFollowing() {
+    fun toggleFollowing(currentUserId:String) {
         val selectedMember = _selectedMember.value ?: return
         val currentState = followingStates[selectedMember.id] ?: false
         val newState = !currentState
@@ -75,6 +91,9 @@ class SocialFollowingViewModel @Inject constructor(
             updatedFollowingList.add(selectedMember)
         } else {
             updatedFollowingList.remove(selectedMember)
+            removeFromFollowingList(currentUserId, selectedMember)
+            updateMyFollowingCount(currentUserId)
+            updateSelectedUserFollowerCount(selectedMember)
         }
 
         // 전체 팔로잉 멤버 목록 업데이트
@@ -86,15 +105,57 @@ class SocialFollowingViewModel @Inject constructor(
         } else if (currentIndex > 0) {
             // 마지막 멤버를 삭제한 경우 이전 멤버 선택
             selectMember(updatedFollowingList[currentIndex - 1])
-        } else {
+        } else{
             // 모두 삭제된 경우 선택 해제
             _selectedMember.value = null
+            _memberPosts.value = emptyList()
         }
     }
 
 
-    // 특정 멤버의 게시글 로드
-    private fun loadMemberPosts(member: Member) {
-        _memberPosts.value = repository.getPostsByMember(member) // 멤버의 게시글 데이터 가져오기
+    // 팔로잉 멤버 게시글 업데이트
+    fun loadMemberPosts(member: Member) = viewModelScope.launch {
+        runCatching {
+            repository.getPostsByMember(member)
+        }.onSuccess {
+            _memberPosts.value = it
+
+        }.onFailure {
+            it.printStackTrace()
+        }
+    }
+
+    // 현재 로그인한 유저의 팔로잉 리스트에서 멤버 삭제
+    private fun removeFromFollowingList(currentUserId: String, selectmember: Member) {
+
+        val selectedMemberId = firestore.collection("Member").document(selectmember.id)
+
+        Log.d("팔로잉 탭 Follow", "${currentUserId}, ${selectedMemberId}")
+        // Firestore에서 로그인한 유저의 문서를 가져와서 followingList 업데이트
+        firestore.collection("Member")
+            .document(currentUserId)
+            .update("followingList", FieldValue.arrayRemove(selectedMemberId)) // 팔로잉 리스트에서 해당 멤버를 삭제
+            .addOnSuccessListener {
+                Log.d("팔로잉 탭 Follow", "언팔로우 성공")
+            }
+            .addOnFailureListener { e ->
+                Log.e("팔로잉 탭 Follow", "언팔로우 실패: ${e.message}")
+            }
+    }
+
+    // 언팔로우 시 내 팔로잉 카운트 업데이트
+    private fun updateMyFollowingCount(currentUserId: String) {
+        // 나의 followingCount 감소
+        firestore.collection("Member").document(currentUserId)
+            .update("followingCount", FieldValue.increment(-1.toLong()))
+    }
+
+    // 언팔로우 시 선택 유저의 팔로워 카운트 업데이트
+    private fun updateSelectedUserFollowerCount(selectmember: Member) {
+        val selectedMemberId = firestore.collection("Member").document(selectmember.id)
+
+        // 유저 A의 followerCount 감소
+        firestore.collection("Member").document(selectmember.id)
+            .update("followerCount", FieldValue.increment(-1.toLong()))
     }
 }

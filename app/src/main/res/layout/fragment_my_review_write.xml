@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".customer.ui.fragment.MyReviewWriteFragment">
+
+    <!-- 상단 툴바 -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_review_write"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <!-- 툴바 아이콘 (왼쪽 정렬) -->
+    <ImageView
+        android:id="@+id/iv_toolbar_review_write_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_symbol"
+        app:layout_constraintBottom_toBottomOf="@id/tv_toolbar_review_write_title"
+        app:layout_constraintEnd_toStartOf="@id/tv_toolbar_review_write_title"
+        app:layout_constraintTop_toTopOf="@id/tv_toolbar_review_write_title" />
+
+    <!-- 툴바 제목 (중앙 정렬) -->
+    <TextView
+        android:id="@+id/tv_toolbar_review_write_title"
+        style="@style/AppToolbarTitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="리뷰 작성"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_review_write">
+
+        <!-- 상품 이미지 -->
+        <ImageView
+            android:id="@+id/img_review_product"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/background_button_gray_400"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 상품명 -->
+        <TextView
+            android:id="@+id/tv_review_product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="상품명"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/img_review_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_review_product"
+            app:layout_constraintTop_toTopOf="@id/img_review_product" />
+
+        <!-- 질문 텍스트 -->
+        <TextView
+            android:id="@+id/tv_review_question"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:text="상품은 어떠셨나요? (필수)"
+            android:textAlignment="viewStart"
+            android:textColor="@color/brown_800"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_review_product" />
+
+        <!-- 별점 선택 레이아웃 -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/layout_review_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_review_question">
+
+            <!-- 별 아이콘 (5개) -->
+            <ImageView
+                android:id="@+id/star_1"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star_2"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star_3"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star_4"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star_5"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_star_outline" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!-- 리뷰 작성 안내 텍스트 -->
+        <TextView
+            android:id="@+id/tv_review_instruction"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:text="구매하신 상품의 후기를 작성해주세요. (필수)"
+            android:textAlignment="viewStart"
+            android:textColor="@color/brown_800"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_review_rating" />
+
+        <!-- 리뷰 작성 입력란 -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_review_content"
+            style="@style/CustomTextInputStyle"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:padding="8dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_review_instruction">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_review_character_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="최소 20자"
+            android:textColor="@color/gray_500"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_review_content" />
+
+        <!-- 작성 완료 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_review_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_background"
+            android:enabled="false"
+            android:text="작성 완료"
+            android:textColor="@drawable/button_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_review_character_count" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

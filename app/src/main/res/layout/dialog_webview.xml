@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 닫기 버튼 -->
+    <ImageView
+        android:id="@+id/btnCloseWebView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="닫기"
+        android:src="@drawable/close_24px" />
+
+    <!-- WebView를 담을 컨테이너 (추후 동적으로 WebView 추가) -->
+    <FrameLayout
+        android:id="@+id/webViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp" /> <!-- 닫기 버튼 공간 확보 -->
+
+</FrameLayout>

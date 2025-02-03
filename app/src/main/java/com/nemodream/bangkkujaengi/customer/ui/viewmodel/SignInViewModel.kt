@@ -38,4 +38,18 @@ class SignInViewModel @Inject constructor(
             }
         }
     }
+
+    fun signInAnonymously() = viewModelScope.launch {
+        runCatching {
+            memberRepository.signInAnonymously()
+        }.onSuccess { uid ->
+            if (uid != null) {
+                _loginResult.value = Triple(true, "guest", uid)
+            } else {
+                _loginResult.value = Triple(false, "게스트 로그인에 실패했습니다.", null)
+            }
+        }.onFailure {
+            _loginResult.value = Triple(false, "게스트 로그인에 실패했습니다.", null)
+        }
+    }
 }

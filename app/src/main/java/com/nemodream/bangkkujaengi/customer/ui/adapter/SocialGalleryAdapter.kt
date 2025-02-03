@@ -3,6 +3,7 @@ package com.nemodream.bangkkujaengi.customer.ui.adapter
 import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -43,12 +44,19 @@ class SocialGalleryAdapter(
                 }
                 // 선택 상태 갱신
                 updateSelectionState(photoUri)
+                notifyDataSetChanged()
             }
         }
 
         private fun updateSelectionState(photoUri: Uri) {
             val isSelected = selectedPhotos.contains(photoUri)
             binding.selectionCircle.isSelected = isSelected // 선택 상태 반영
+            binding.tvSelectionOrder.visibility = if (isSelected) View.VISIBLE else View.GONE
+            if (isSelected) {
+                // 선택된 순서를 동그라미 안에 표시
+                val order = selectedPhotos.indexOf(photoUri) + 1
+                binding.tvSelectionOrder.text = order.toString()
+            }
         }
     }
 
@@ -68,4 +76,10 @@ class SocialGalleryAdapter(
     override fun getItemCount(): Int = photoList.size
 
     fun getSelectedPhotos(): List<Uri> = selectedPhotos // 선택된 사진 리스트 반환
+
+    fun setSelectedPhotos(selected: List<Uri>) {
+        selectedPhotos.clear()
+        selectedPhotos.addAll(selected)
+        notifyDataSetChanged()
+    }
 }

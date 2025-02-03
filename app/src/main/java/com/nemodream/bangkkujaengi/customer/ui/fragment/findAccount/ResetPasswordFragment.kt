@@ -8,11 +8,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.snackbar.Snackbar
 import com.nemodream.bangkkujaengi.customer.ui.custom.CustomDialog
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.ResetPasswordViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentResetPasswordBinding
-import com.nemodream.bangkkujaengi.utils.hideKeyboard
+import com.nemodream.bangkkujaengi.utils.clearFocusOnTouchOutside
+import com.nemodream.bangkkujaengi.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,6 +41,11 @@ class ResetPasswordFragment : Fragment() {
             parentFragmentManager.popBackStack() // 뒤로가기
         }
 
+        view.setOnTouchListener { _, event ->
+            clearFocusOnTouchOutside(event) // Fragment 확장 함수 호출
+            false // 다른 터치 이벤트도 처리되도록 false 반환
+        }
+
         memberId = arguments?.getString("memberId")
 
         setupObservers()
@@ -48,11 +53,6 @@ class ResetPasswordFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        // 빈 공간 터치 시 키보드 숨김 처리
-        binding.root.setOnClickListener {
-            binding.root.hideKeyboard()
-        }
-
         // 입력 필드 변화 감지
         binding.tfResetPwPw.editText?.addTextChangedListener { validateFields() }
         binding.tfResetPwChkPw.editText?.addTextChangedListener { validateFields() }
@@ -63,12 +63,12 @@ class ResetPasswordFragment : Fragment() {
             val confirmPassword = binding.tfResetPwChkPw.editText?.text.toString()
 
             if (password.length < 8) {
-                Snackbar.make(binding.root, "비밀번호는 8자 이상 입력해주세요.", Snackbar.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root, "비밀번호는 8자 이상 입력해주세요.")
                 return@setOnClickListener
             }
 
             if (password != confirmPassword) {
-                Snackbar.make(binding.root, "비밀번호가 서로 다릅니다.", Snackbar.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root, "비밀번호가 서로 다릅니다.")
                 return@setOnClickListener
             }
 
@@ -101,7 +101,7 @@ class ResetPasswordFragment : Fragment() {
         // 성공 메시지 관찰
         viewModel.successMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
-                Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root, it)
                 requireActivity().finish() // 현재 액티비티 종료
             }
         }
@@ -109,7 +109,7 @@ class ResetPasswordFragment : Fragment() {
         // 오류 메시지 관찰
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
-                Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root, it)
             }
         }
     }

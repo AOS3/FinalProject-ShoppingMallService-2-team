@@ -90,6 +90,8 @@
         android:id="@+id/rv_category_product_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingHorizontal="12dp"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,4 +99,14 @@
         app:layout_constraintTop_toBottomOf="@id/chip_promotion_sort"
         app:spanCount="2"
         tools:listitem="@layout/item_product" />
+
+    <include
+        android:id="@+id/shimmer_category_product"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        layout="@layout/layout_product_shimmer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chip_promotion_sort" />
 </androidx.constraintlayout.widget.ConstraintLayout>

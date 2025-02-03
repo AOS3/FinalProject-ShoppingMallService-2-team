@@ -19,6 +19,9 @@ class SocialDiscoveryViewModel @Inject constructor(
     private val _posts = MutableLiveData<List<Post>>(emptyList())
     val posts: LiveData<List<Post>> get() = _posts
 
+    // SocialDetailFragment 와 공유할 뷰모델
+    val selectedPost = MutableLiveData<Post>()
+
     /**
      * 게시글 목록 로드
      */

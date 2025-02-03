@@ -191,7 +191,15 @@ class AdminAddProductViewModel @Inject constructor(
                 productCount = count.toInt(),
                 images = _imageUris.value?.map { it.toString() } ?: emptyList(),
                 colors = _colors.value ?: emptyList(),
-                searchKeywords = title.split(" ")
+                searchKeywords = title.split(" "),
+                likeCount = 0,
+                createdAt = System.currentTimeMillis(),
+                delete = false,
+                like = false,
+                isBest = false,
+                purchaseCount = 0,
+                reviewCount = 0,
+                viewCount = 0,
             )
         }.onSuccess { product ->
             adminProductRepository.addProduct(product, _imageUris.value ?: emptyList())

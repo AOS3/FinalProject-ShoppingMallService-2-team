@@ -11,13 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nemodream.bangkkujaengi.customer.data.model.Coupon
-import com.nemodream.bangkkujaengi.customer.data.model.Promotion
 import com.nemodream.bangkkujaengi.customer.data.repository.PaymentRepository
 import com.nemodream.bangkkujaengi.customer.ui.adapter.PaymentCouponBottomSheetAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.PaymentCouponBottomSheetViewModel
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.PaymentViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentPaymentCouponBottomeSheetBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_non_member_inquiry"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <ImageView
+        android:id="@+id/img_order_inquiry_logo"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_symbol" />
+
+    <TextView
+        android:id="@+id/tv_order_inquiry_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="방꾸쟁이"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_order_inquiry_logo" />
+
+    <TextView
+        android:id="@+id/tv_sign_in_app_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="소개"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_order_inquiry_name" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tf_order_inquiry_member_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
+        app:hintEnabled="false"
+        app:hintTextColor="@color/brown_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_sign_in_app_description">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_background_button_brown"
+            android:hint="주문번호"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tf_order_inquiry_member_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
+        app:hintEnabled="false"
+        app:hintTextColor="@color/brown_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tf_order_inquiry_member_number">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_background_button_brown"
+            android:hint="비밀번호"
+            android:inputType="textPassword"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_order_inquiry_member_find_info_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="3dp"
+        android:text="주문 정보가 기억나지 않는다면?"
+        android:textColor="@color/brown_500"
+        android:textSize="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_order_inquiry_member_find_info"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_order_inquiry_member_find_info"
+        app:layout_constraintStart_toStartOf="@id/tf_order_inquiry_member_password"
+        app:layout_constraintTop_toBottomOf="@id/tf_order_inquiry_member_password" />
+
+    <TextView
+        android:id="@+id/tv_order_inquiry_member_find_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="주문번호 찾기 / 주문 비밀번호 찾기"
+        android:textColor="@color/brown_500"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/tv_order_inquiry_member_find_info_label"
+        app:layout_constraintEnd_toEndOf="@id/tf_order_inquiry_member_password"
+        app:layout_constraintTop_toBottomOf="@id/tf_order_inquiry_member_password" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_order_inquiry"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/background_button_brown_800"
+        android:text="주문조회"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_order_inquiry_member_find_info_label" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        style="@style/AppDivider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@id/btn_order_inquiry"
+        app:layout_constraintStart_toStartOf="@id/btn_order_inquiry"
+        app:layout_constraintTop_toBottomOf="@id/btn_order_inquiry" />
+
+    <TextView
+        android:id="@+id/tv_order_inquiry_member_sign_up_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="회원가입 시 다양한 혜택을 받을 수 있어요!"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sign_up"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_stroke_brown_800"
+        android:text="회원가입"
+        android:textColor="@color/brown_800"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_order_inquiry_member_sign_up_label" />
+</androidx.constraintlayout.widget.ConstraintLayout>

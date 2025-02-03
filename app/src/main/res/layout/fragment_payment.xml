@@ -102,13 +102,81 @@
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_payment_zip_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:focusable="false"
+                        android:hint="우편 번호"
+                        app:endIconMode="clear_text"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:singleLine="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btn_payment_zip_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="65dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="bottom"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:backgroundTint="#332828"
+                        android:text="주소 찾기"
+                        />
+                </LinearLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_payment_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:hint="주소"
                     app:endIconMode="clear_text"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_payment_detailed_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:hint="상세 주소"
+                    app:endIconMode="clear_text"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_payment_non_member_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:hint="비회원 배송 조회 비밀번호"
+                    app:endIconMode="clear_text"
+                    android:visibility="gone"
                     >
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -132,6 +200,7 @@
                 />
 
             <TextView
+                android:id="@+id/tv_payment_coupon_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

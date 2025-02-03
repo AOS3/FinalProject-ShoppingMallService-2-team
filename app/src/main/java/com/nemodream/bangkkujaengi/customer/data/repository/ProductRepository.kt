@@ -2,8 +2,10 @@ package com.nemodream.bangkkujaengi.customer.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.nemodream.bangkkujaengi.customer.data.model.CategoryType
 import com.nemodream.bangkkujaengi.customer.data.model.Product
@@ -26,20 +28,19 @@ class ProductRepository @Inject constructor(
     suspend fun getProducts(
         category: CategoryType,
         subCategory: SubCategoryType,
-        sortType: SortType
+        sortType: SortType,
+        userId: String,
     ): List<Product> {
         return try {
-            Log.d("ProductRepository", "Fetching products with category: $category, subCategory: ${subCategory.title}")
-
             // 기본 쿼리 생성
             var query = when (category) {
                 CategoryType.ALL -> {
-                    Log.d("ProductRepository", "Getting ALL products without filtering")
                     firestore.collection(COLLECTION_PRODUCTS)
+                        .whereEqualTo("delete", false)
                 }
                 else -> {
-                    Log.d("ProductRepository", "Filtering by category: ${category.name}")
                     firestore.collection(COLLECTION_PRODUCTS)
+                        .whereEqualTo("delete", false)
                         .whereEqualTo("category", category.name)
                         .let { baseQuery ->
                             if (subCategory.title != "전체") {
@@ -67,7 +68,7 @@ class ProductRepository @Inject constructor(
 
             documents.mapNotNull { document ->
                 try {
-                    document.toProduct()
+                    document.toProduct(userId)
                 } catch (e: Exception) {
                     null
                 }
@@ -78,24 +79,14 @@ class ProductRepository @Inject constructor(
         }
     }
 
-    private suspend fun DocumentSnapshot.toProduct(): Product {
-        val imageUrls = (get("images") as? List<String>)?.map { imagePath ->
-            getImageUrl(imagePath)
-        } ?: emptyList()
-
-        return Product(
+    private suspend fun DocumentSnapshot.toProduct(userId: String): Product {
+        return toObject<Product>()?.copy(
             productId = id,
-            productName = getString("productName") ?: "",
-            description = getString("description") ?: "",
-            images = imageUrls,
-            isBest = getBoolean("best") ?: false,
-            category = CategoryType.fromString(getString("category") ?: ""),
-            subCategory = SubCategoryType.fromString(getString("subCategory") ?: ""),
-            price = getLong("price")?.toInt() ?: 0,
-            productCount = getLong("productCount")?.toInt() ?: 0,
-            saledPrice = getLong("saledPrice")?.toInt() ?: 0,
-            saleRate = getLong("saleRate")?.toInt() ?: 0
-        )
+            images = (get("images") as? List<String>)?.map { imagePath ->
+                getImageUrl(imagePath)
+            } ?: emptyList(),
+            like = isProductLiked(userId, id)
+        ) ?: Product()
     }
 
     private suspend fun getImageUrl(imagePath: String) = storage.reference
@@ -103,6 +94,77 @@ class ProductRepository @Inject constructor(
         .downloadUrl
         .await()
         .toString()
+
+    /* 좋아요 토글 */
+    suspend fun toggleProductLikeState(userId: String, productId: String) {
+        try {
+            firestore.runTransaction { transaction ->
+                // 현재 좋아요 상태만 확인
+                val likeDoc = transaction.get(
+                    firestore.collection("ProductLike").document(userId)
+                )
+
+                val currentLikes = if (likeDoc.exists()) {
+                    (likeDoc.get("productIds") as? List<String>) ?: emptyList()
+                } else {
+                    emptyList()
+                }
+
+                // 좋아요 상태 토글
+                if (productId in currentLikes) {
+                    // 좋아요 취소
+                    transaction.update(
+                        firestore.collection("ProductLike").document(userId),
+                        mapOf(
+                            "productIds" to currentLikes - productId,
+                            "updatedAt" to System.currentTimeMillis()
+                        )
+                    )
+                    transaction.update(
+                        firestore.collection("Product").document(productId),
+                        "likeCount", FieldValue.increment(-1)
+                    )
+                } else {
+                    // 좋아요 추가
+                    transaction.set(
+                        firestore.collection("ProductLike").document(userId),
+                        mapOf(
+                            "userId" to userId,
+                            "productIds" to currentLikes + productId,
+                            "updatedAt" to System.currentTimeMillis()
+                        )
+                    )
+                    transaction.update(
+                        firestore.collection("Product").document(productId),
+                        "likeCount", FieldValue.increment(1)
+                    )
+                }
+            }.await()
+        } catch (e: Exception) {
+            Log.e("HomeRepository", "좋아요 상태변경 실패: ", e)
+            throw e
+        }
+    }
+
+    /* 상품 좋아요 여부 확인 */
+    private suspend fun isProductLiked(userId: String, productId: String): Boolean {
+        return try {
+            val doc = firestore.collection("ProductLike")
+                .document(userId)
+                .get()
+                .await()
+
+            if (doc.exists()) {
+                val productIds = doc.get("productIds") as? List<String>
+                productIds?.contains(productId) ?: false
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("ProductRepository", "좋아요 상태변경 실패: ", e)
+            false
+        }
+    }
 
     companion object {
         private const val COLLECTION_PRODUCTS = "Product"

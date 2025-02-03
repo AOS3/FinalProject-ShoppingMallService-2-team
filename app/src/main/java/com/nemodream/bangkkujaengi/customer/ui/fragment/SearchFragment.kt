@@ -1,7 +1,11 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,25 +14,30 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nemodream.bangkkujaengi.customer.data.model.Product
 import com.nemodream.bangkkujaengi.customer.data.model.SearchHistory
 import com.nemodream.bangkkujaengi.customer.ui.adapter.OnItemClickListener
+import com.nemodream.bangkkujaengi.customer.ui.adapter.ProductClickListener
 import com.nemodream.bangkkujaengi.customer.ui.adapter.SearchHistoryAdapter
 import com.nemodream.bangkkujaengi.customer.ui.adapter.SearchResultAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.SearchViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentSearchBinding
+import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.getUserType
 import com.nemodream.bangkkujaengi.utils.hideKeyboard
+import com.nemodream.bangkkujaengi.utils.showLoginSnackbar
 import com.nemodream.bangkkujaengi.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(), OnItemClickListener {
+class SearchFragment : Fragment(), OnItemClickListener, ProductClickListener {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var appContext: Context
     private val viewModel: SearchViewModel by viewModels()
     private val searchAdapter: SearchHistoryAdapter by lazy { SearchHistoryAdapter(this) }
-    private val searchResultAdapter: SearchResultAdapter by lazy { SearchResultAdapter() }
+    private val searchResultAdapter: SearchResultAdapter by lazy { SearchResultAdapter(this) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,35 +72,60 @@ class SearchFragment : Fragment(), OnItemClickListener {
 
     private fun observeViewModel() {
         with(binding) {
-            viewModel.searchHistory.observe(viewLifecycleOwner) { searchHistory ->
-                when(searchHistory.isEmpty()) {
-                    true -> { // 최근 검색이 없을 때
-                        tvSearchHistoryLabel.visibility = View.GONE
-                        tvClearAll.visibility = View.GONE
-                        groupRecentSearches.visibility = View.GONE
-                    }
-                    false -> {
-                        groupRecentSearches.visibility = View.VISIBLE
+            viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    shimmerLayout.root.visibility = View.VISIBLE
+                    rvSearchResultList.visibility = View.GONE
+                    rvSearchHistoryList.visibility = View.GONE
+                    groupRecentSearches.visibility = View.GONE
+                    layoutResultEmpty.root.visibility = View.GONE
+                } else {
+                    shimmerLayout.root.visibility = View.GONE
+                    if (viewModel.searchResults.value?.isNotEmpty() == true) {
+                        rvSearchResultList.visibility = View.VISIBLE
+                        searchResultAdapter.submitList(viewModel.searchResults.value)
+                    } else {
+                        rvSearchHistoryList.visibility = View.GONE
                     }
                 }
-                searchAdapter.submitList(searchHistory)
+            }
+
+            viewModel.searchHistory.observe(viewLifecycleOwner) { searchHistory ->
+                if (viewModel.isLoading.value == true) return@observe
+
+                if (searchHistory.isEmpty()) {
+                    tvSearchHistoryLabel.visibility = View.GONE
+                    tvClearAll.visibility = View.GONE
+                    groupRecentSearches.visibility = View.GONE
+                    layoutHistoryEmpty.root.visibility = View.VISIBLE
+                } else {
+                    groupRecentSearches.visibility = View.VISIBLE
+                    layoutHistoryEmpty.root.visibility = View.GONE
+                    searchAdapter.submitList(searchHistory)
+                }
             }
 
             viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
-                groupRecentSearches.visibility = View.GONE
                 rvSearchHistoryList.visibility = View.GONE
+                groupRecentSearches.visibility = View.GONE
 
-                when(searchResults.isEmpty()) {
-                    true -> {
-                        rvSearchResultList.visibility = View.GONE
-                        layoutResultEmpty.root.visibility = View.VISIBLE
-                    }
-                    false -> {
-                        rvSearchResultList.visibility = View.VISIBLE
-                        layoutResultEmpty.root.visibility = View.GONE
-                        searchResultAdapter.submitList(searchResults)
+                if (searchResults.isEmpty()) {
+                    layoutResultEmpty.root.visibility = View.VISIBLE
+                    rvSearchHistoryList.visibility = View.GONE
+                    rvSearchResultList.visibility = View.GONE
+                    tvSearchResultLabel.visibility = View.GONE
+                } else {
+                    layoutResultEmpty.root.visibility = View.GONE
+                    rvSearchResultList.visibility = View.VISIBLE
+                    tvSearchResultLabel.apply {
+                        text = setupSearchResultText(
+                            etSearchTrack.editText?.text.toString(),
+                            searchResults.size
+                        )
+                        visibility = View.VISIBLE
                     }
                 }
+                searchResultAdapter.submitList(searchResults)
             }
         }
     }
@@ -133,7 +167,16 @@ class SearchFragment : Fragment(), OnItemClickListener {
             return
         }
         viewModel.addSearch(query)
-        viewModel.getProductsByProductName(binding.etSearchTrack.editText?.text.toString())
+        viewModel.getProductsByProductName(binding.etSearchTrack.editText?.text.toString(), appContext.getUserId())
+    }
+
+    private fun setupSearchResultText(query: String, resultCount: Int): SpannableStringBuilder {
+        return SpannableStringBuilder().apply {
+            append(query, StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            append("에 대한 검색 결과 ")
+            append(resultCount.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            append("건")
+        }
     }
 
     override fun onItemClick(item: SearchHistory) {
@@ -145,5 +188,24 @@ class SearchFragment : Fragment(), OnItemClickListener {
 
     override fun onDeleteClick(search: SearchHistory) {
         viewModel.deleteSearch(search)
+    }
+
+    override fun onProductClick(product: Product) {
+        val action = SearchFragmentDirections.actionNavigationSearchToNavigationProductDetail(product.productId)
+        findNavController().navigate(action)
+    }
+
+    override fun onFavoriteClick(product: Product) {
+        when(appContext.getUserType()) {
+            "member" -> {
+                viewModel.toggleFavorite(appContext.getUserId(), product.productId)
+            }
+            "guest" -> {
+                appContext.showLoginSnackbar(binding.root) {
+                    val action = CategoryProductFragmentDirections.actionNavigationCategoryToSignInActivity()
+                    findNavController().navigate(action)
+                }
+            }
+        }
     }
 }

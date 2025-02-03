@@ -1,7 +1,11 @@
 package com.nemodream.bangkkujaengi.customer.data.model
 
+import android.os.Parcelable
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.PropertyName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Coupon(
     // 쿠폰 문서 ID
     val documentId: String = "",
@@ -37,9 +41,14 @@ data class Coupon(
     val morePrice : Int = 0,
     
     // 활성화 or 비활성화
-    val isActivity : Boolean = true
+    @PropertyName("activity") val isActivity : Boolean = true,
 
-)
+    // 사용 여뷰 확인
+    @PropertyName("use") val isUse: Boolean = false,
+
+    // 보유중
+    @PropertyName("hold") val isHold: Boolean = false,
+): Parcelable
 
 enum class CouponType(val number: Int, val str: String) {
     SALE_RATE(1, "SALE_RATE"),

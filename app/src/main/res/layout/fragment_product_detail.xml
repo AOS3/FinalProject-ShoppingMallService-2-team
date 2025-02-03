@@ -65,6 +65,7 @@
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_arrow_back" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -77,6 +78,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/shimmer_detail"
+                layout="@layout/layout_product_detail_shimmer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_product_detail_title"
@@ -129,7 +140,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/tv_product_detail_category"
-                app:layout_constraintTop_toBottomOf="@id/tv_product_detail_category"
+                app:layout_constraintTop_toBottomOf="@id/tv_product_detail_review_count"
                 tools:text="10,000원" />
 
             <TextView
@@ -154,7 +165,54 @@
                 app:layout_constraintBottom_toBottomOf="@+id/tv_product_detail_discount_rate"
                 app:layout_constraintStart_toEndOf="@id/tv_product_detail_discount_rate"
                 app:layout_constraintTop_toTopOf="@id/tv_product_detail_discount_rate"
-                tools:text="7,000원" />
+                tools:text=",007,007,007,007,000원700원" />
+
+            <TextView
+                android:id="@+id/view_discount_blind"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/background_button_brown_800"
+                android:gravity="center"
+                android:text="로그인 후 할인받기"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_product_detail_discount_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_product_detail_discount_rate"
+                app:layout_constraintTop_toTopOf="@id/tv_product_detail_discount_rate" />
+
+            <TextView
+                android:id="@+id/tv_product_detail_review_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="4dp"
+                android:text="리뷰 5건"
+                android:textColor="@color/gray_500"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/tv_product_detail_rating"
+                app:layout_constraintTop_toBottomOf="@+id/tv_product_detail_category" />
+
+            <TextView
+                android:id="@+id/tv_product_detail_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="4.5"
+                app:layout_constraintStart_toEndOf="@+id/img_star"
+                app:layout_constraintTop_toBottomOf="@+id/tv_product_detail_category" />
+
+            <ImageView
+                android:id="@+id/img_star"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_product_detail_category"
+                app:srcCompat="@drawable/ic_star_fill" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/divider"
@@ -204,10 +262,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_product_detail_content_description"
                 tools:listitem="@layout/item_product_detail_image_list" />
+
+            <include
+                android:id="@+id/layout_product_reviews"
+                layout="@layout/product_detail_review"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="80dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_product_detail_content_image_list" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_fix_area"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="bottom"
@@ -257,5 +329,14 @@
             app:layout_constraintEnd_toEndOf="@id/view_bottom_fix_area"
             app:layout_constraintStart_toEndOf="@id/btn_like"
             app:layout_constraintTop_toTopOf="@id/view_bottom_fix_area" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_product_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="tv_product_detail_category, tv_product_detail_is_best, tv_product_detail_price, tv_product_detail_discount_rate, tv_product_detail_discount_price, divider, iv_product_detail_content_image, tv_product_detail_content_description, rv_product_detail_content_image_list, view_bottom_fix_area, btn_like, tv_like_count, btn_product_order" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

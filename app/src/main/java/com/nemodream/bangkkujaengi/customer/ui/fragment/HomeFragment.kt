@@ -1,10 +1,12 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
@@ -19,6 +21,9 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.ProductClickListener
 import com.nemodream.bangkkujaengi.customer.ui.adapter.PromotionAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.HomeViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentHomeBinding
+import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.getUserType
+import com.nemodream.bangkkujaengi.utils.showLoginSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,11 +31,18 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     MoreProductsClickListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var appContext: Context
 
     private val viewModel: HomeViewModel by viewModels()
+    private val productStateSharedViewModel: ProductStateSharedViewModel by activityViewModels()
 
     private val bannerAdapter: HomeBannerAdapter by lazy { HomeBannerAdapter(this) }
     private val promotionAdapter: PromotionAdapter by lazy { PromotionAdapter(this, this) }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appContext = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +55,9 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setMemberId(requireContext().getUserId())
+        viewModel.loadPromotions()
+
         observeViewModel()
         setupLayout()
         setupListeners()
@@ -61,6 +76,35 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
         val action =
             HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(banner.productId)
         findNavController().navigate(action)
+        requireContext().getUserId()
+    }
+
+    override fun onProductClick(product: Product) {
+        val action =
+            HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(product.productId)
+        findNavController().navigate(action)
+    }
+
+    override fun onFavoriteClick(product: Product) {
+        when(appContext.getUserType()) {
+            "member" -> {
+                viewModel.toggleFavorite(appContext.getUserId(), product.productId)
+            }
+            "guest" -> {
+                appContext.showLoginSnackbar(
+                    binding.root,
+                    requireActivity().findViewById(R.id.customer_bottom_navigation),
+                ) {
+                    val action = HomeFragmentDirections.actionNavigationHomeToSignInActivity()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+    }
+
+    override fun onMoreProductsClick(title: String) {
+        val action = HomeFragmentDirections.actionNavigationHomeToNavigationPromotion(title)
+        findNavController().navigate(action)
     }
 
     /*
@@ -68,6 +112,10 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     * 변경이 감지되면 데이터 갱신
     * */
     private fun observeViewModel() {
+        productStateSharedViewModel.likeUpdate.observe(viewLifecycleOwner) { (productId, isLiked) ->
+            viewModel.updateProductLikeState(productId, isLiked)
+        }
+
         viewModel.bannerItems.observe(viewLifecycleOwner) { bannerList ->
             bannerAdapter.submitList(bannerList)
         }
@@ -104,6 +152,7 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
                         promotionShimmerLayout.root.visibility = View.VISIBLE
                         rvPromotion.visibility = View.GONE
                     }
+
                     false -> {
                         shimmerLayout.startShimmer()
                         promotionShimmerLayout.root.visibility = View.GONE
@@ -119,8 +168,6 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     * 화면 UI 배치 관련 함수 모음
     * */
     private fun setupLayout() {
-        viewModel.loadBannerItems()
-        viewModel.loadPromotions()
         setupHomeBannerUI()
         binding.rvPromotion.adapter = promotionAdapter
     }
@@ -143,6 +190,14 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
     * */
     private fun setupListeners() {
         with(binding) {
+            categoryAll.root.setOnClickListener {
+                val action =
+                    HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(
+                        CategoryType.ALL
+                    )
+                findNavController().navigate(action)
+            }
+
             categoryFurniture.root.setOnClickListener {
                 val action =
                     HomeFragmentDirections.actionNavigationHomeToCategoryProductFragment(
@@ -198,14 +253,4 @@ class HomeFragment : Fragment(), OnBannerItemClickListener, ProductClickListener
         }
     }
 
-    override fun onProductClick(product: Product) {
-        val action =
-            HomeFragmentDirections.actionNavigationHomeToNavigationProductDetail(product.productId)
-        findNavController().navigate(action)
-    }
-
-    override fun onMoreProductsClick(title: String) {
-        val action = HomeFragmentDirections.actionNavigationHomeToNavigationPromotion(title)
-        findNavController().navigate(action)
-    }
 }

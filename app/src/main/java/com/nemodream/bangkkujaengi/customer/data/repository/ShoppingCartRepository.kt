@@ -13,6 +13,19 @@ class ShoppingCartRepository {
 
     companion object {
 
+        // 문서 id로 userId 가져오기
+        suspend fun getting_user_id_by_document_id(document_id: String): String {
+            val firestore = FirebaseFirestore.getInstance()
+            val collectionReference = firestore.collection("Member")
+
+            // Firestore에서 해당 document_id가 있는 문서 조회
+            val documentSnapshot = collectionReference.document(document_id).get().await()
+
+            val memberId = documentSnapshot.getString("memberId")
+            Log.d("FirestoreCheck", "User ID: $memberId")
+            return memberId!! // 반환
+        }
+
         // 유저 id로 장바구니 아이템 정보 가져오기
         suspend fun getting_shopping_cart_item_by_userId(user_id: String): MutableList<Map<String, *>> {
             val firestore = FirebaseFirestore.getInstance()
@@ -297,8 +310,8 @@ class ShoppingCartRepository {
                     memberName = document.getString("memberName") ?: "",
                     memberNickName = document.getString("memberNickName") ?: "",
                     memberPhoneNumber = document.getString("memberPhoneNumber") ?: "", // 처리된 전화번호
-                    memberProfileImage = document.getString("memberProfileImage"),
-                    point = document.getString("point")?.toIntOrNull() ?: 3000,
+                    memberProfileImage = document.getString("memberProfileImage") ?: "https://www.studiopeople.kr/common/img/default_profile.png",
+                    point = document.getLong("point")?.toInt() ?: 3000,
                     isActive = document.getBoolean("isActive") ?: false,
                     createAt = document.getLong("createAt") ?: 0L,
                     followingCount = document.getLong("followingCount")?.toInt() ?: 0,

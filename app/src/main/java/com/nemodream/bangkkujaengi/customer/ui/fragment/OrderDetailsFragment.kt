@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nemodream.bangkkujaengi.R
 import com.nemodream.bangkkujaengi.customer.data.repository.OrderHistoryRepository
@@ -37,6 +38,9 @@ class OrderDetailsFragment : Fragment() {
     ): View? {
         fragmentOrderDetailsBinding = FragmentOrderDetailsBinding.inflate(inflater, container, false)
 
+        // 툴바 세팅
+        setting_toolbar()
+        
         // 값 옵저버 세팅
         setting_observe()
 
@@ -47,6 +51,18 @@ class OrderDetailsFragment : Fragment() {
         setting_order_details_recyclerview()
 
         return fragmentOrderDetailsBinding.root
+    }
+
+    // 툴바 세팅
+    fun setting_toolbar() {
+        fragmentOrderDetailsBinding.tbOrderDetails.apply {
+            // 툴바에 뒤로가기 버튼 아이콘 생성
+            setNavigationIcon(R.drawable.ic_arrow_back)
+            // 툴바 뒤로가기 버튼의 이벤트
+            setNavigationOnClickListener {
+                findNavController().navigateUp()
+            }
+        }
     }
 
     // 유저 id와 상품 구매 시간을 가져오는 메소드

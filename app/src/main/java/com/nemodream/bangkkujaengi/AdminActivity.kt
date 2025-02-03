@@ -1,6 +1,8 @@
 package com.nemodream.bangkkujaengi
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -14,6 +16,15 @@ class AdminActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        // SharedPreferences에서 사용자 상태 로드
+        val sharedPreferences = getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE)
+        val userType = sharedPreferences.getString("userType", "guest")
+        val documentId = sharedPreferences.getString("documentId", null)
+
+        // 사용자 상태 로그 출력
+        Log.d("login", "사용자 유형: $userType, 문서 ID: $documentId")
+
         setupBackPressHandler()
     }
 

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- 선택 취소 -->
+    <TextView
+        android:id="@+id/tv_order_pc_cancel_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:text="선택취소"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 선택 준비 -->
+    <TextView
+        android:id="@+id/tv_order_pc_prepare_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:text="선택준비"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/tv_order_pc_cancel_selection"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- HorizontalScrollView (스크롤 가능한 헤더) -->
+    <HorizontalScrollView
+        android:id="@+id/scr_order_pc_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/tv_order_pc_prepare_selection"
+        tools:layout_editor_absoluteX="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dp">
+
+            <!-- 체크박스 -->
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_order_pc_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:buttonTint="@color/brown_800"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 주문일시 -->
+            <TextView
+                android:id="@+id/tv_order_pc_order_date_header"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="12dp"
+                android:text="주문일시"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/cb_order_pc_header"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 상품명 -->
+            <TextView
+                android:id="@+id/tv_order_pc_product_name_header"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="상품명"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/tv_order_pc_order_date_header"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 구매자ID -->
+            <TextView
+                android:id="@+id/tv_order_pc_customer_id_header"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="구매자ID"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/tv_order_pc_product_name_header"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 주문번호 -->
+            <TextView
+                android:id="@+id/tv_order_pc_order_number_header"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="주문번호"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/tv_order_pc_customer_id_header"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 배송상태 -->
+            <TextView
+                android:id="@+id/tv_order_pc_order_delivery_status"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="배송상태"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/tv_order_pc_order_number_header"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 송장번호 -->
+            <TextView
+                android:id="@+id/tv_order_pc_order_invoice_number"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="송장번호"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/tv_order_pc_order_delivery_status"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 배송완료일 -->
+            <TextView
+                android:id="@+id/tv_order_pc_order_delivery_date"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="배송완료일"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/tv_order_pc_order_invoice_number"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </HorizontalScrollView>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider1"
+        style="@style/AppDivider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/scr_order_pc_header"
+        tools:ignore="MissingConstraints" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

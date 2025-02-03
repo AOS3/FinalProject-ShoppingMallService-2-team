@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.FindIdViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentFindIdBinding
+import com.nemodream.bangkkujaengi.utils.clearFocusOnTouchOutside
 import com.nemodream.bangkkujaengi.utils.hideKeyboard
+import com.nemodream.bangkkujaengi.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class FindIdFragment : Fragment() {
@@ -32,6 +31,11 @@ class FindIdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.setOnTouchListener { _, event ->
+            clearFocusOnTouchOutside(event) // Fragment 확장 함수 호출
+            false // 다른 터치 이벤트도 처리되도록 false 반환
+        }
 
         setupObservers()
         setupListeners()
@@ -53,18 +57,13 @@ class FindIdFragment : Fragment() {
         // 오류 메시지 관찰
         findIdViewModel.errorMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root, it)
             }
         }
     }
 
 
     private fun setupListeners() {
-        // 빈 공간 터치 시 키보드 숨김 처리
-        binding.root.setOnClickListener {
-            binding.root.hideKeyboard()
-        }
-
         // 아이디 찾기 버튼 클릭
         binding.btnFindIdFindId.setOnClickListener {
             binding.root.hideKeyboard()
@@ -72,7 +71,7 @@ class FindIdFragment : Fragment() {
             val phoneNumber = binding.tfFindIdPhoneNumber.editText?.text.toString()
 
             if (name.isBlank() || phoneNumber.isBlank()) {
-                Toast.makeText(requireContext(), "이름과 전화번호를 모두 입력해주세요.", Toast.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root, "이름과 전화번호를 모두 입력해주세요.")
             } else {
                 findIdViewModel.findId(name, phoneNumber)
             }

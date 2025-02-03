@@ -1,6 +1,5 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
-import android.R.attr.onClick
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

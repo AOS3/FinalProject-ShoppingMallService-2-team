@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우편번호 검색</title>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 도로명 주소, 지번 주소 및 참고 항목 처리
+                var roadAddr = data.roadAddress; // 도로명 주소
+                var jibunAddr = data.jibunAddress; // 지번 주소
+                var extraRoadAddr = ''; // 참고 항목
+
+                // 참고 항목 추가
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                    extraRoadAddr += data.bname;
+                }
+                if (data.buildingName !== '' && data.apartment === 'Y') {
+                    extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                if (extraRoadAddr !== '') {
+                    extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+
+                // 기본적으로 지번 주소를 우선적으로 사용
+                var baseAddr = jibunAddr || roadAddr;
+                var finalAddr = baseAddr + extraRoadAddr; // 참고 항목 추가된 주소
+
+                // Android의 WebAppInterface 호출
+                if (window.Android) {
+                    window.Android.processDATA(data.zonecode, finalAddr, extraRoadAddr);
+                } else {
+                    alert("Android 인터페이스가 로드되지 않았습니다.");
+                }
+            }
+        }).open();
+    }
+
+    // 페이지 로드 시 실행
+    window.onload = execDaumPostcode;
+</script>
+</body>
+</html>

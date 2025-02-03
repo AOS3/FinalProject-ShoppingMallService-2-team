@@ -67,11 +67,10 @@ class AdminEditProductViewModel @Inject constructor(
 
 
     private fun initializeProductData(product: Product) = viewModelScope.launch {
-        val imageUrls = product.images.map { path ->
+        _storageImages.value = product.images
+        _displayImages.value = product.images.map { path ->
             Uri.parse(adminProductRepository.getImageUrl(path))
         }
-        _displayImages.value = imageUrls
-        _storageImages.value = product.images
 
         _colors.value = product.colors
         _category.value = product.category
@@ -83,21 +82,20 @@ class AdminEditProductViewModel @Inject constructor(
         validateCurrentFields()
     }
 
-
     fun addNewImages(newUris: List<Uri>) {
         val currentUris = _newImageUris.value?.toMutableList() ?: mutableListOf()
-        val totalImagesCount = (_storageImages.value?.size ?: 0) + currentUris.size
-        val remainingSlots = MAX_IMAGE_COUNT - totalImagesCount
-        val urisToAdd = newUris.take(remainingSlots)
-        currentUris.addAll(urisToAdd)
+        val remainingSlots = MAX_IMAGE_COUNT - (_storageImages.value?.size ?: 0) - currentUris.size
+        currentUris.addAll(newUris.take(remainingSlots))
         _newImageUris.value = currentUris
         updateDisplayImages()
     }
 
-    private fun updateDisplayImages() {
-        val storageUris = _storageImages.value?.map { Uri.parse(it) } ?: emptyList()
+    private fun updateDisplayImages() = viewModelScope.launch {
+        val storageDisplayUris = _storageImages.value?.map { path ->
+            Uri.parse(adminProductRepository.getImageUrl(path))
+        } ?: emptyList()
         val newUris = _newImageUris.value ?: emptyList()
-        _displayImages.value = storageUris + newUris
+        _displayImages.value = storageDisplayUris + newUris
         validateCurrentFields()
     }
 
@@ -248,7 +246,14 @@ class AdminEditProductViewModel @Inject constructor(
         productCount = count.toInt(),
         images = _storageImages.value ?: emptyList(),
         colors = _colors.value ?: emptyList(),
-        searchKeywords = title.split(" ")
+        searchKeywords = title.split(" "),
+        createdAt = System.currentTimeMillis(),
+        delete = false,
+        like = false,
+        likeCount = 0,
+        purchaseCount = 0,
+        reviewCount = 0,
+        viewCount = 0,
     )
 
     companion object {

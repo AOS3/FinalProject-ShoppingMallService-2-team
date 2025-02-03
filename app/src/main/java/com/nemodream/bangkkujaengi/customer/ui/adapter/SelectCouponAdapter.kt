@@ -89,7 +89,9 @@ class SelectCouponAdapter(
 
             // 총 상품 가격 뷰모델 값 세팅
             paymentFragment.paymentViewModel.tv_payment_tot_price_text.value =
-                paymentFragment.paymentViewModel.tv_payment_tot_price_text.value?.plus(it.price * paymentFragment.payment_product_list.items[position].quantity)
+                paymentFragment.paymentViewModel.tv_payment_tot_price_text.value?.plus(
+                    it.price * paymentFragment.payment_product_list.items[position].quantity
+                )
 
             // 총 할인 가격 뷰모델 값 세팅
             paymentFragment.paymentViewModel.tv_payment_tot_sale_price_text.value =

@@ -79,7 +79,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="#332828"
         android:src="@drawable/ic_add_white"
-        android:fillColor="#FFFFFF"
+        app:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

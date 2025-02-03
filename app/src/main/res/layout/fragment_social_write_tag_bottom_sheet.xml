@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Drag Handle -->
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/BottomSheetDragHandleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <!-- 검색 입력 영역 -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_search_track"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/background_gray_300"
+        app:cursorColor="@color/gray_300"
+        app:endIconMode="clear_text"
+        app:hintAnimationEnabled="false"
+        app:hintEnabled="false">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:hint="검색어를 입력해주세요."
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="8dp"
+            android:textSize="14sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 검색 버튼 -->
+    <ImageButton
+        android:id="@+id/btn_search_track"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="-45dp"
+        android:layout_gravity="end"
+        android:background="?attr/actionBarItemBackground"
+        android:padding="12dp"
+        android:src="@drawable/ic_search" />
+
+    <!-- 검색어와 결과 수 -->
+    <TextView
+        android:id="@+id/tv_search_result_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        tools:text="아무튼 조명에 대한 검색결과 00건" />
+
+    <!-- 검색 결과 영역 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="800dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="-15dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/item_product" />
+
+    <!-- 로딩 애니메이션 -->
+    <include
+        android:id="@+id/shimmer_layout"
+        layout="@layout/layout_product_shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-15dp"
+        android:visibility="gone" />
+
+    <!-- 결과 없음 레이아웃 -->
+    <include
+        android:id="@+id/layout_result_empty"
+        layout="@layout/layout_result_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="800dp"
+        android:layout_marginTop="-130dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <!-- 검색 첫화면 레이아웃 -->
+    <include
+        android:id="@+id/layout_enter_tag_product"
+        layout="@layout/layout_enter_tag_product"
+        android:layout_width="wrap_content"
+        android:layout_height="800dp"
+        android:layout_marginTop="-130dp"
+        android:layout_gravity="center" />
+
+</LinearLayout>

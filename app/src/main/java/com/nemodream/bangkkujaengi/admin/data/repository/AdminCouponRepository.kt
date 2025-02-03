@@ -11,7 +11,11 @@ class AdminCouponRepository @Inject constructor(
 
     // 쿠폰 데이터 Coupon 컬렉션에 저장하기
     suspend fun saveCoupon(coupon: Coupon) {
-        firestore.collection("Coupon").add(coupon).await()
+        val docRef = firestore.collection("Coupon").add(coupon).await()
+        firestore.collection("Coupon")
+            .document(docRef.id)
+            .update("documentId", docRef.id)
+            .await()
     }
 
     // 쿠폰 정보 읽어오기

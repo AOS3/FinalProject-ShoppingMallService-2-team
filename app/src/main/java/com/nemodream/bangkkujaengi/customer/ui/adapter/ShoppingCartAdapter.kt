@@ -33,6 +33,7 @@ class ShoppingCartAdapter(
     private val shoppingCartViewModel: ShoppingCartViewModel,
     private val fragmentShoppingCartBinding: FragmentShoppingCartBinding,
     private val shoppingCartFragment: ShoppingCartFragment,
+    private val user_type: String,
     private val onRefresh: () -> Unit // RecyclerView refresh callback
 ) : RecyclerView.Adapter<ShoppingCartAdapter.ShoppingCartViewHolder>() {
 
@@ -58,6 +59,18 @@ class ShoppingCartAdapter(
         holder.rowShoppingCartRecyclerviewBinding.pbRowShoppingCartProductImageLoading.visibility = View.VISIBLE
         holder.rowShoppingCartRecyclerviewBinding.ivRowShoppingCartProductImage.visibility = View.GONE
 
+        when(user_type) {
+            "member" -> {
+
+            }
+            else -> {
+                holder.rowShoppingCartRecyclerviewBinding.tvRowShoppingCartProductSalePercent.visibility =
+                    View.GONE
+                holder.rowShoppingCartRecyclerviewBinding.tvRowShoppingCartProductOriginPrice.visibility =
+                    View.GONE
+            }
+        }
+
         // 상품 이미지 로드
         CoroutineScope(Dispatchers.Main).launch {
             val work1 = async(Dispatchers.IO) {
@@ -79,12 +92,24 @@ class ShoppingCartAdapter(
             cart_product_data_list[position].productName
 
         // 할인 비율 초기 데이터 저장
-        rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_percent.value =
-            cart_product_data_list[position].saleRate
+        rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_percent.value = when(user_type){
+            "member" -> {
+                cart_product_data_list[position].saleRate
+            }
+            else -> {
+                0
+            }
+        }
 
         // 할인 전 가격 초기 데이터 저장
-        rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value =
-            cart_product_data_list[position].price * cart_data_list.items[position].quantity
+        rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value = when(user_type){
+            "member" -> {
+                cart_product_data_list[position].price * cart_data_list.items[position].quantity
+            }
+            else -> {
+                cart_product_data_list[position].price * cart_data_list.items[position].quantity
+            }
+        }
 
 
         // 할인 후 가격 초기 데이터 저장
@@ -92,8 +117,14 @@ class ShoppingCartAdapter(
         val originalPrice = cart_product_data_list[position].price
         // 할인율
         val discountRate = cart_product_data_list[position].saleRate
-        rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value =
-            ((originalPrice * (1 - (discountRate / 100.0))).toInt() * cart_data_list.items[position].quantity)
+        rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value = when(user_type){
+            "member" -> {
+                ((originalPrice * (1 - (discountRate / 100.0))).toInt() * cart_data_list.items[position].quantity)
+            }
+            else -> {
+                cart_product_data_list[position].price * cart_data_list.items[position].quantity
+            }
+        }
 
         // 상품 갯수 초기 데이터 저장
         rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value =
@@ -111,23 +142,37 @@ class ShoppingCartAdapter(
                     rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!!
                 )
 
-            shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value =
-                shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.plus(
-                    rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! -
-                            rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value!!
-                )
+            shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value = when(user_type) {
+                "member" -> {
+                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.plus(
+                        rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! -
+                                rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value!!
+                    )
+                }
+                else -> {
+                    0
+                }
+            }
 
             // 총 합 금액 업데이트
-            shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value =
-                shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
-                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
-                        shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+            shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value = when(user_type) {
+                "member" -> {
+                    shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
+                            shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
+                            shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                }
+                else -> {
+                    shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! +
+                            shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                }
+            }
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////
 
 
         ////////////////////////////////////// UI 업데이트 ///////////////////////////////////////
+        // 상품 선택 여부
         rowShoppingCartViewModel.cb_row_shopping_cart_product_select_checked.observe(viewLifecycleOwner) {
             holder.rowShoppingCartRecyclerviewBinding.cbRowShoppingCartProductSelect.isChecked = it
         }
@@ -148,7 +193,15 @@ class ShoppingCartAdapter(
         
         // 할인 비율 업데이트
         rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_percent.observe(viewLifecycleOwner) {
-            holder.rowShoppingCartRecyclerviewBinding.tvRowShoppingCartProductSalePercent.text = it.toString() + "%"
+            when(user_type) {
+                "member" -> {
+                    holder.rowShoppingCartRecyclerviewBinding.tvRowShoppingCartProductSalePercent.text = it.toString() + "%"
+                }
+                else -> {
+                    holder.rowShoppingCartRecyclerviewBinding.tvRowShoppingCartProductSalePercent.text =
+                        "%"
+                }
+            }
         }
         // 원가 (할인 전 가격) 업데이트
         rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.observe(viewLifecycleOwner) {
@@ -179,6 +232,9 @@ class ShoppingCartAdapter(
 
             // 상품의 CheckBox를 체크할 경우
             if (isChecked) {
+                // 체크 카운터 +1
+                shoppingCartViewModel.checked_cnt.value =
+                    shoppingCartViewModel.checked_cnt.value!!.plus(1)
                 CoroutineScope(Dispatchers.Main).launch {
                     val work1 = async(Dispatchers.IO) {
                         ShoppingCartRepository.update_cart_item_checked_by_user_id(
@@ -194,24 +250,38 @@ class ShoppingCartAdapter(
                         )
 
                     // 총 할인 가격 업데이트
-                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value =
-                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.plus(
-                            rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! -
-                                    rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value!!
-                        )
+                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value = when(user_type) {
+                        "member" -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.plus(
+                                rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! -
+                                        rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value!!
+                            )
+                        }
+                        else -> {
+                            0
+                        }
+                    }
 
                     // 총 합 금액 업데이트
-                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value =
-                        shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
-                                shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
-                                shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
-
-
+                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value = when(user_type) {
+                        "member" -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
+                                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
+                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                        }
+                        else -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! +
+                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                        }
+                    }
                 }
             }
 
             // 상품의 CheckBox의 체크를 해제할 경우
             else {
+                // 체크 카운터 -1
+                shoppingCartViewModel.checked_cnt.value =
+                    shoppingCartViewModel.checked_cnt.value!!.minus(1)
                 CoroutineScope(Dispatchers.Main).launch {
                     val work1 = async(Dispatchers.IO) {
                         ShoppingCartRepository.update_cart_item_checked_by_user_id(
@@ -228,27 +298,51 @@ class ShoppingCartAdapter(
                         )
 
                     // 총 할인 가격 업데이트
-                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value =
-                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.minus(
-                            rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! -
-                                    rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value!!
-                        )
+                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value = when(user_type) {
+                        "member" -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.minus(
+                                rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! -
+                                        rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value!!
+                            )
+                        }
+                        else -> {
+                            0
+                        }
+                    }
 
-                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value =
-                        shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value!!.minus(
-                            // 총 상품 가격
-                            rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! +
-                                    // 총 할인 가격
-                                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
-                                    // 총 배송비
-                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
-                        )
+                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value = when(user_type) {
+                        "member" -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value!!.minus(
+                                // 총 상품 가격
+                                rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! +
+                                        // 총 할인 가격
+                                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
+                                        // 총 배송비
+                                        shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                            )
+                        }
+                        else -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value!!.minus(
+                                // 총 상품 가격
+                                rowShoppingCartViewModel.tv_row_shopping_cart_product_origin_price.value!! +
+                                        // 총 배송비
+                                        shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                            )
+                        }
+                    }
 
                     // 총 합 금액 업데이트
-                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value =
-                        shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
-                                shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
-                                shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value = when(user_type) {
+                        "member" -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
+                                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
+                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                        }
+                        else -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! +
+                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                        }
+                    }
 
                 }
 
@@ -290,8 +384,14 @@ class ShoppingCartAdapter(
                 val originalPrice = cart_product_data_list[position].price
                 // 할인율
                 val discountRate = cart_product_data_list[position].saleRate
-                rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value =
-                    ((originalPrice * (1 - (discountRate / 100.0))).toInt() * rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!!)
+                rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value = when(user_type) {
+                    "member" -> {
+                        ((originalPrice * (1 - (discountRate / 100.0))).toInt() * rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!!)
+                    }
+                    else -> {
+                        cart_product_data_list[position].price * rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!!
+                    }
+                }
 
 
                 // checkbox 가 true일 경우 총 상품 가격 값을 업데이트 한다.
@@ -308,17 +408,31 @@ class ShoppingCartAdapter(
                     val originalPrice = cart_product_data_list[position].price
                     // 할인율
                     val discountRate = cart_product_data_list[position].saleRate
-                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value =
-                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.plus(
-                            cart_product_data_list[position].price -
-                                    ((originalPrice * (1 - (discountRate / 100.0))).toInt())
-                        )
+                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value = when(user_type) {
+                        "member" -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.plus(
+                                cart_product_data_list[position].price -
+                                        ((originalPrice * (1 - (discountRate / 100.0))).toInt())
+                            )
+                        }
+                        else -> {
+                            0
+                        }
+                    }
 
                     // 총 합 금액 업데이트
-                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value =
-                        shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
-                                shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
-                                shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                    shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value = when(user_type) {
+                        "member" -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
+                                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
+                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                        }
+                        else -> {
+                            shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! +
+                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                        }
+                    }
+
                 }
 
                 // 작업 완료 후 ProgressBar 숨기고 버튼 복원
@@ -331,7 +445,7 @@ class ShoppingCartAdapter(
 
         // 수량 감소 버튼 클릭 이벤트
         holder.rowShoppingCartRecyclerviewBinding.ibtnRowShoppingCartProductCntRemove.setOnClickListener {
-            if (rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!! > 0) {
+            if (rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!! > 1) {
                 // 버튼 클릭 시 ProgressBar를 표시하고 버튼 숨기기
                 holder.rowShoppingCartRecyclerviewBinding.pbRowShoppingCartLoading.visibility = View.VISIBLE
                 holder.rowShoppingCartRecyclerviewBinding.ibtnRowShoppingCartProductCntAdd.visibility = View.GONE
@@ -362,8 +476,14 @@ class ShoppingCartAdapter(
                     val originalPrice = cart_product_data_list[position].price
                     // 할인율
                     val discountRate = cart_product_data_list[position].saleRate
-                    rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value =
-                        ((originalPrice * (1 - (discountRate / 100.0))).toInt() * rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!!)
+                    rowShoppingCartViewModel.tv_row_shopping_cart_product_sale_price.value = when(user_type) {
+                        "member" -> {
+                            ((originalPrice * (1 - (discountRate / 100.0))).toInt() * rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!!)
+                        }
+                        else -> {
+                            cart_product_data_list[position].price * rowShoppingCartViewModel.tv_row_shopping_cart_product_cnt.value!!
+                        }
+                    }
 
                     // checkbox 가 true일 경우 총 상품 가격 값을 업데이트 한다.
                     if (rowShoppingCartViewModel.cb_row_shopping_cart_product_select_checked.value!!) {
@@ -378,17 +498,30 @@ class ShoppingCartAdapter(
                         val originalPrice = cart_product_data_list[position].price
                         // 할인율
                         val discountRate = cart_product_data_list[position].saleRate
-                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value =
-                            shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.minus(
-                                cart_product_data_list[position].price -
-                                        ((originalPrice * (1 - (discountRate / 100.0))).toInt())
-                            )
+                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value = when(user_type) {
+                            "member" -> {
+                                shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!!.minus(
+                                    cart_product_data_list[position].price -
+                                            ((originalPrice * (1 - (discountRate / 100.0))).toInt())
+                                )
+                            }
+                            else -> {
+                                0
+                            }
+                        }
 
                         // 총 합 금액 업데이트
-                        shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value =
-                            shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
-                                    shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
-                                    shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                        shoppingCartViewModel.tv_shopping_cart_tot_sum_price_text.value = when(user_type) {
+                            "member" -> {
+                                shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! -
+                                        shoppingCartViewModel.tv_shopping_cart_tot_sale_price_text.value!! +
+                                        shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                            }
+                            else -> {
+                                shoppingCartViewModel.tv_shopping_cart_tot_price_text.value!! +
+                                        shoppingCartViewModel.tv_shopping_cart_tot_delivery_cost_text.value!!
+                            }
+                        }
 
                     }
 

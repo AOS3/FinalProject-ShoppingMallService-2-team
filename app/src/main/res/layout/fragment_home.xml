@@ -91,13 +91,23 @@
                 app:layout_constraintTop_toBottomOf="@id/viewPager_carousel">
 
                 <include
+                    android:id="@+id/category_all"
+                    layout="@layout/view_category_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintEnd_toStartOf="@id/category_furniture"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <include
                     android:id="@+id/category_furniture"
                     layout="@layout/view_category_furniture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toStartOf="@id/category_lighting"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/category_all"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <include

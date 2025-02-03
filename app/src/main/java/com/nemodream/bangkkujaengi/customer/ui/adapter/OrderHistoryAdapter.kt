@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
@@ -22,6 +23,7 @@ import java.util.Locale
 class OrderHistoryAdapter(
     val orderHistoryFragment: OrderHistoryFragment,
     val orderHistoryViewModel: OrderHistoryViewModel,
+    val viewLifecycleOwner: LifecycleOwner
     ) : RecyclerView.Adapter<OrderHistoryAdapter.OrderHistoryViewHolder>() {
 
     inner class OrderHistoryViewHolder(val rowOrderHistoryBinding: RowOrderHistoryBinding) :
@@ -107,7 +109,10 @@ class OrderHistoryAdapter(
 
         orderHistoryProductViewModel.order_history_product_list.value = filteredList
 
-        Log.d("filteredList", "${orderHistoryProductViewModel.order_history_product_list.value}")
+        orderHistoryProductViewModel.order_history_product_list.value!!.forEach {
+            Log.d("filteredList", "${it}")
+        }
+
     }
 
     // 날짜에 해당하는 항목 recyclerview //////////////////////////////////////////////////////////////
@@ -118,8 +123,10 @@ class OrderHistoryAdapter(
     ) {
         rowOrderHistoryBinding.apply {
             rvOrderHistoryProduct.adapter = OrderHistoryProductAdapter(
+                orderHistoryFragment,
                 orderHistoryViewModel,
-                orderHistoryProductViewModel
+                orderHistoryProductViewModel,
+                viewLifecycleOwner
             )
             rvOrderHistoryProduct.layoutManager = LinearLayoutManager(context)
         }

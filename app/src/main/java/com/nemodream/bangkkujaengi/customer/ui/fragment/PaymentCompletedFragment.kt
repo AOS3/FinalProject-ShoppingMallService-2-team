@@ -19,22 +19,38 @@ class PaymentCompletedFragment : Fragment() {
     ): View? {
         fragmentPaymentCompletedBinding = FragmentPaymentCompletedBinding.inflate(inflater, container, false)
 
+        // 이미지 세팅
         setting_image()
 
+        // 홈으로 이동 버튼
         setting_btn_payment_completed_home()
+
+        // 구매 내역 버튼
+//        setting_btn_payment_completed_order_history()
 
         return fragmentPaymentCompletedBinding.root
     }
 
+    // 이미지 세팅
     fun setting_image() {
         fragmentPaymentCompletedBinding.ivPaymentCompleted.setImageResource(R.drawable.ic_symbol)
     }
 
+    // 홈으로 이동 버튼
     fun setting_btn_payment_completed_home() {
         fragmentPaymentCompletedBinding.btnPaymentCompletedHome.setOnClickListener {
             val action = PaymentCompletedFragmentDirections.popUptoPaymentCompletedFragmentToHomeFragment()
             findNavController().navigate(action)
         }
     }
+
+    // 구매 내역 버튼
+//    fun setting_btn_payment_completed_order_history() {
+//        fragmentPaymentCompletedBinding.btnPaymentCompletedOrderHistory.setOnClickListener {
+//            val action = PaymentCompletedFragmentDirections.popUptoPaymentCompletedFragmentToNavigationOrderDetails()
+//            findNavController().navigate(action)
+//        }
+//
+//    }
 
 }

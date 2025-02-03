@@ -1,5 +1,7 @@
 package com.nemodream.bangkkujaengi.customer.data.model
 
+import com.google.firebase.firestore.DocumentReference
+
 data class Member(
 
     // 문서 id
@@ -15,7 +17,7 @@ data class Member(
     // 전화번호
     val memberPhoneNumber: String = "",
     // 프로필 사진
-    val memberProfileImage: String? = null,
+    val memberProfileImage: String = "https://www.studiopeople.kr/common/img/default_profile.png",
     // 적립금
     val point: Int = 3000,
     // 탈퇴 여부
@@ -31,7 +33,7 @@ data class Member(
     // 팔로워 수
     val followerCount:Int = 0,
     // 팔로잉 목록
-    val followingList: List<Member> = emptyList(),
+    val followingList: List<DocumentReference> = emptyList(),
     // 올린 게시글 목록
     val postedList: List<Post> = emptyList(),
     // 저장한 게시글 리스트

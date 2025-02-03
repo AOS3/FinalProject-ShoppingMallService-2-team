@@ -23,4 +23,6 @@ data class Product(
     val createdAt: Long = System.currentTimeMillis(),
     val colors: List<String> = emptyList(),
     val delete: Boolean = false,
+    val like: Boolean = false,
+    val likeCount: Int = 0,
 ): Parcelable

@@ -1,9 +1,11 @@
 package com.nemodream.bangkkujaengi.customer.data.repository
 
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.nemodream.bangkkujaengi.customer.data.model.Purchase
+import com.nemodream.bangkkujaengi.customer.data.model.PurchaseState
 import kotlinx.coroutines.tasks.await
 
 class OrderHistoryRepository {
@@ -25,7 +27,8 @@ class OrderHistoryRepository {
 
                 // 결과를 Purchase 객체 리스트로 변환
                 val orderHistoryList = querySnapshot.documents.mapNotNull { document ->
-                    document.toObject(Purchase::class.java)
+                    val purchase = document.toObject(Purchase::class.java)
+                    purchase?.copy(documentId = document.id)
                 }
 
                 orderHistoryList.forEach {
@@ -70,6 +73,38 @@ class OrderHistoryRepository {
                 emptyList()
             }
         }
+
+        suspend fun getting_purchase_data_by_document_id(document_id: String): Purchase? {
+            val firestore = FirebaseFirestore.getInstance()
+            val collectionReference = firestore.collection("Purchase")
+            return try {
+                val documentSnapshot = collectionReference.document(document_id).get().await()
+                Log.d("getting_purchase_data_by_document_id", "${documentSnapshot.toObject(Purchase::class.java)}")
+                documentSnapshot.toObject(Purchase::class.java)
+            } catch (e: Exception) {
+                Log.e("FirestoreError", "Error fetching purchase data: ${e.message}", e)
+                null
+            }
+        }
+
+        suspend fun update_purchase_state(document_id: String) {
+            val firestore = FirebaseFirestore.getInstance()
+            val collectionReference = firestore.collection("Purchase")
+            try {
+                // Firestore에서 해당 documentId의 purchaseState를 업데이트
+                collectionReference.document(document_id)
+                    .update(
+                        "purchaseState", PurchaseState.PURCHASE_CONFIRMED.name,
+                        "purchaseConfirmedTime", Timestamp.now()
+                    )
+                    .await()
+
+                Log.d("FirestoreUpdate", "Successfully updated purchaseState to PURCHASE_CONFIRMED for documentId: $document_id")
+            } catch (e: Exception) {
+                Log.e("FirestoreError", "Error updating purchaseState: ${e.message}", e)
+            }
+        }
+
 
 
     }

@@ -1,5 +1,6 @@
 package com.nemodream.bangkkujaengi
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,12 +13,17 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.nemodream.bangkkujaengi.databinding.ActivityCustomerBinding
+import com.nemodream.bangkkujaengi.utils.getUserType
 import com.nemodream.bangkkujaengi.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CustomerActivity : AppCompatActivity() {
-    private val binding: ActivityCustomerBinding by lazy { ActivityCustomerBinding.inflate(layoutInflater) }
+    private val binding: ActivityCustomerBinding by lazy {
+        ActivityCustomerBinding.inflate(
+            layoutInflater
+        )
+    }
     private var lastBackPress: Long = 0
 
     // 네비게이션 보여야 되는 화면은 여기 정의해주세요.
@@ -31,14 +37,17 @@ class CustomerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        // 전달받은 데이터 처리
-        val isGuest = intent.getBooleanExtra("isGuest", true)
-        val documentId = intent.getStringExtra("documentId")
+        // SharedPreferences에서 사용자 상태 로드
+        val sharedPreferences = getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE)
+        val userType = sharedPreferences.getString("userType", "guest") // 기본값: guest
+        val documentId = sharedPreferences.getString("documentId", null)
 
-        if (isGuest) {
-            Log.d("CustomerActivity", "비회원으로 이용 중")
-        } else {
-            Log.d("CustomerActivity", "회원으로 이용 중, 문서 ID: $documentId")
+        // 사용자 상태 로그 출력
+        when (userType) {
+            "admin" -> Log.d("login", "관리자로 이용 중")
+            "member" -> Log.d("login", "회원으로 이용 중, 문서 ID: $documentId")
+            "guest" -> Log.d("login", "비회원으로 이용 중")
+            else -> Log.d("login", "알 수 없는 사용자 상태")
         }
 
         val navController = setupNavHost()
@@ -117,15 +126,43 @@ class CustomerActivity : AppCompatActivity() {
      */
     private fun setupListeners(navController: NavController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.customerBottomNavigation.visibility = when (destination.id) {
-                in showBottomNavDestinations -> View.VISIBLE
-                else -> View.GONE
+            // 비회원일 때 Social 화면 접근 방지
+            if (getUserType() == "guest" && destination.id == R.id.navigation_social) {
+                // 비회원은 Social 화면에 접근 못하도록 막고, 스낵바 표시
+                showSnackBar(binding.root, "비회원은 이 화면에 접근할 수 없습니다.")
+                // 현재 Social 화면으로의 이동을 막기 위해 navigateUp()
+                navController.navigateUp()
+            } else {
+                // 네비게이션 화면 표시
+                binding.customerBottomNavigation.visibility = when (destination.id) {
+                    in showBottomNavDestinations -> View.VISIBLE
+                    else -> View.GONE
+                }
             }
         }
-    }
 
-    companion object {
-        private const val BACK_PRESS_THRESHOLD = 2000L
-        private const val BACK_PRESS_MESSAGE = "뒤로가기 버튼을 한 번 더 누르면 종료됩니다."
+
+//        회원일 경우: 네비게이션 바텀 아이템 클릭을 정상 처리
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            if (userType == "member") {
+//                binding.customerBottomNavigation.visibility = when (destination.id) {
+//                    in showBottomNavDestinations -> View.VISIBLE
+//                    else -> View.GONE
+//                }
+//            }else{
+//                when (destination.id) {
+//                    R.id.navigation_home -> {binding.customerBottomNavigation.visibility = View.VISIBLE}
+//                    R.id.navigation_social -> {
+//                        showGuestOnlyDialog()
+//                        binding.customerBottomNavigation.visibility = View.GONE }
+//                    R.id.navigation_my_page -> {binding.customerBottomNavigation.visibility = View.VISIBLE}
+//                }
+//            }
+//        }
+        }
+
+        companion object {
+            private const val BACK_PRESS_THRESHOLD = 2000L
+            private const val BACK_PRESS_MESSAGE = "뒤로가기 버튼을 한 번 더 누르면 종료됩니다."
+        }
     }
-}

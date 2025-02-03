@@ -1,5 +1,6 @@
 package com.nemodream.bangkkujaengi.customer.ui.fragment
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,18 +19,23 @@ import com.nemodream.bangkkujaengi.customer.data.repository.SocialFollowingRepos
 import com.nemodream.bangkkujaengi.customer.ui.adapter.OnPostItemClickListener
 import com.nemodream.bangkkujaengi.customer.ui.adapter.SocialDiscoveryAdapter
 import com.nemodream.bangkkujaengi.customer.ui.adapter.SocialFollowingProfilesAdapter
+import com.nemodream.bangkkujaengi.customer.ui.viewmodel.SocialDiscoveryViewModel
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.SocialFollowingViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentSocialFollowingBinding
+import com.nemodream.bangkkujaengi.utils.getUserId
 import com.nemodream.bangkkujaengi.utils.loadImage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
 @AndroidEntryPoint
 class SocialFollowingFragment : Fragment(), OnPostItemClickListener {
 
     private var _binding: FragmentSocialFollowingBinding? = null
     private val binding get() = _binding!!
+    private lateinit var appContext: Context
 
     private val viewModel: SocialFollowingViewModel by viewModels()
+    private val shareViewModel: SocialDiscoveryViewModel by activityViewModels()
 
     // 팔로잉 프로필 RecyclerView의 어댑터
     private val profileAdapter: SocialFollowingProfilesAdapter by lazy {
@@ -40,6 +47,11 @@ class SocialFollowingFragment : Fragment(), OnPostItemClickListener {
     // 게시글 RecyclerView의 어댑터
     private val postAdapter: SocialDiscoveryAdapter by lazy {
         SocialDiscoveryAdapter(this) // Fragment 자체가 OnPostItemClickListener를 구현
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appContext = context
     }
 
     // 프래그먼트의 뷰를 생성하는 메서드
@@ -57,7 +69,7 @@ class SocialFollowingFragment : Fragment(), OnPostItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews() // RecyclerView 초기화
         observeViewModel() // ViewModel 데이터 관찰 설정
-        viewModel.loadFollowingMembers() // 팔로잉 멤버 데이터를 로드
+        viewModel.loadFollowingMembers(appContext.getUserId()) // 팔로잉 멤버 데이터를 로드
         setupListeners() // 리스너 설정
     }
 
@@ -100,7 +112,7 @@ class SocialFollowingFragment : Fragment(), OnPostItemClickListener {
                 binding.ivSelectedProfileImage.loadImage(selectedMember.memberProfileImage.toString())
                 binding.tvSelectedProfileNickname.text = it.memberNickName
                 binding.tvSelectedProfileFollowInfo.text =
-                    "팔로잉 ${selectedMember.followingCount}명     팔로워 ${selectedMember.followerCount}명"
+                    "팔로잉 ${selectedMember.followingList.size}명     팔로워 ${selectedMember.followerCount}명"
             } ?: run {
                 // 선택된 멤버가 없을 경우 프로필 정보를 숨김
                 binding.clSelectedProfileInfo.visibility = View.GONE
@@ -109,8 +121,10 @@ class SocialFollowingFragment : Fragment(), OnPostItemClickListener {
 
         // 선택된 멤버의 게시글 리스트 관찰
         viewModel.memberPosts.observe(viewLifecycleOwner) { posts ->
+            val selectedMember = viewModel.selectedMember.value
+
             // 게시글 유무에 따라 "게시글이 아직 없습니다" 텍스트 보여줌
-            if (posts.isNullOrEmpty()) {
+            if (selectedMember != null && posts.isNullOrEmpty()) {
                 binding.tvNoPosts.visibility = View.VISIBLE
                 binding.rvFollowingPosts.visibility = View.GONE
             } else {
@@ -123,6 +137,26 @@ class SocialFollowingFragment : Fragment(), OnPostItemClickListener {
         // 팔로잉 상태에 따라 버튼 텍스트 변경
         viewModel.isFollowing.observe(viewLifecycleOwner) { isFollowing ->
             updateFollowingButtonStyle(isFollowing)
+        }
+
+        // 팔로잉 멤버 리스트 관찰
+        viewModel.followingMembers.observe(viewLifecycleOwner) { followingMembers ->
+            // 팔로잉 멤버 유무에 따라 "아직 팔로잉한 유저가 없습니다!" 텍스트 보여줌
+            if (followingMembers.isNullOrEmpty()) {
+                binding.tvNoFollowing.visibility = View.VISIBLE
+                binding.tvNoFollowingSub.visibility = View.VISIBLE
+                binding.topScrollLayout.visibility = View.GONE
+                binding.clSelectedProfileInfo.visibility = View.GONE
+                binding.rvFollowingPosts.visibility = View.GONE
+                binding.tvNoPosts.visibility = View.GONE
+            }
+            else{
+                binding.tvNoFollowing.visibility = View.GONE
+                binding.tvNoFollowingSub.visibility = View.GONE
+                binding.topScrollLayout.visibility = View.VISIBLE
+                binding.clSelectedProfileInfo.visibility = View.VISIBLE
+                binding.rvFollowingPosts.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -158,21 +192,21 @@ class SocialFollowingFragment : Fragment(), OnPostItemClickListener {
         with(binding) {
             // 팔로잉 상태 토글
             btnFollowingFollowing.setOnClickListener {
-                viewModel.toggleFollowing()
+                viewModel.toggleFollowing(appContext.getUserId())
             }
 
             tvAllProfiles.setOnClickListener {
                 val action = SocialFragmentDirections.actionNavigationSocialToSocialFollowingAllFragment()
                 findNavController().navigate(action)
             }
-
-
         }
     }
 
 
     //게시글 클릭 이벤트를 처리하는 메서드
     override fun onPostItemClick(post: Post) {
-        // 게시글 클릭 시 처리할 로직 (예: 상세 화면으로 이동)
+        shareViewModel.selectedPost.value = post
+        val action = SocialFragmentDirections.actionSocialFragmentToSocialDetailFragment()
+        findNavController().navigate(action)
     }
 }

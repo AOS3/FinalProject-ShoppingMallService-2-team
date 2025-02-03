@@ -26,9 +26,15 @@
         android:id="@+id/tabLayout_find_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_find_info"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_find_info"
+        app:tabIndicatorColor="@color/brown_800"
+        app:tabIndicatorFullWidth="true"
+        app:tabRippleColor="@color/brown_500"
+        app:tabSelectedTextColor="@color/brown_800"
+        app:tabTextColor="@color/gray_400">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

@@ -12,6 +12,7 @@
         android:orientation="horizontal"
         android:overScrollMode="never"
         android:paddingHorizontal="12dp"
+        android:layoutAnimation="@null"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toTopOf="parent" />
 

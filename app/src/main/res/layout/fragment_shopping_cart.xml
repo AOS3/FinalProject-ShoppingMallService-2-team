@@ -222,7 +222,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginEnd="20dp"
-                android:backgroundTint="#332828"
                 android:text="구매하기 (1)" />
 
             <Button
@@ -244,6 +243,16 @@
                 android:layout_marginEnd="20dp"
                 android:backgroundTint="#332828"
                 android:text="주문 내역" />
+
+            <Button
+                android:id="@+id/btn_shopping_cart_non_member_order_history"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#332828"
+                android:text="비회원 주문 내역" />
         </LinearLayout>
 
 

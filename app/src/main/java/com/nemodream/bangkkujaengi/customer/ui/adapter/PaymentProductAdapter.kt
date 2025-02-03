@@ -3,6 +3,7 @@ package com.nemodream.bangkkujaengi.customer.ui.adapter
 import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +31,8 @@ class PaymentProductAdapter(
     var paymentViewModel: PaymentViewModel,
     // observe
     val viewLifecycleOwner: LifecycleOwner,
-
+    // 회원 or 비회원
+    val user_type: String
     ) : RecyclerView.Adapter<PaymentProductAdapter.PaymentProductViewHolder>() {
 
     inner class PaymentProductViewHolder(val rowPaymentRecyclerviewBinding: RowPaymentRecyclerviewBinding) :
@@ -50,6 +52,16 @@ class PaymentProductAdapter(
 
     override fun onBindViewHolder(holder: PaymentProductViewHolder, position: Int) {
         val rowPaymentRecyclerviewViewModel = RowPaymentRecyclerviewViewModel()
+
+        when(user_type) {
+            "member" -> {
+
+            }
+            else -> {
+                holder.rowPaymentRecyclerviewBinding.tvRowPaymentProductOriginPrice.visibility = View.GONE
+                holder.rowPaymentRecyclerviewBinding.tvRowPaymentProductSalePercent.visibility = View.GONE
+            }
+        }
 
         // 옵저버 세팅 메소드 호출
         setting_text_observe(rowPaymentRecyclerviewViewModel, holder, position)
@@ -94,8 +106,14 @@ class PaymentProductAdapter(
         val originalPrice = payment_product_data_list[position].price
         // 할인율
         val discountRate = payment_product_data_list[position].saleRate
-        rowPaymentRecyclerviewViewModel.tv_row_payment_product_sale_price.value =
-            ((originalPrice * (1 - (discountRate / 100.0))).toInt() * payment_product_list.items[position].quantity)
+        rowPaymentRecyclerviewViewModel.tv_row_payment_product_sale_price.value = when(user_type) {
+            "member" -> {
+                ((originalPrice * (1 - (discountRate / 100.0))).toInt() * payment_product_list.items[position].quantity)
+            }
+            else -> {
+                payment_product_data_list[position].price * payment_product_list.items[position].quantity
+            }
+        }
 
         // 상품 갯수 뷰모델 값 세팅
         rowPaymentRecyclerviewViewModel.tv_row_payment_product_cnt.value =

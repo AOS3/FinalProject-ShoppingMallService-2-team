@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".customer.ui.fragment.ShippingStatusFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/tb_shipping_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_toolbar_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_symbol"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_shipping_status_toolbar_title"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_shipping_status_toolbar_title"
+                        style="@style/AppToolbarTitleStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_shipping_status"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="받는 사람 : "
+                    />
+
+                <TextView
+                    android:id="@+id/tv_shipping_status_recipient_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="받는 주소 : "
+                    />
+
+                <TextView
+                    android:id="@+id/tv_shipping_status_recipient_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="송장 번호 : "
+                    />
+
+                <TextView
+                    android:id="@+id/tv_shipping_status_invoice_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="123456789"
+                    />
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_payment_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/credit_card_black_72px"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_shipping_status_payment_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="결제 완료"
+                        android:textAppearance="@style/AppTextLabel.S14.Bold"
+                        android:textColor="@color/black"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_payment_status_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/check_circle_24px"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_ready_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/package_2_gray_72px"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_shipping_status_ready_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="상품 준비중"
+                        android:textAppearance="@style/AppTextLabel.S14.Bold"
+                        android:textColor="@color/gray_300"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_ready_status_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/circle_24px"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_delivery_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/delivery_truck_speed_gray_72px"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_shipping_status_delivery_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="배송중"
+                        android:textAppearance="@style/AppTextLabel.S14.Bold"
+                        android:textColor="@color/gray_300"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_delivery_status_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/circle_24px"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_complete_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/select_check_box_gray_72px"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_shipping_status_complete_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="배송완료"
+                        android:textAppearance="@style/AppTextLabel.S14.Bold"
+                        android:textColor="@color/gray_300"
+                        />
+
+                    <ImageView
+                        android:id="@+id/iv_shipping_status_complete_status_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/circle_24px"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:paddingStart="10dp"
+                android:text="주문 목록"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_row_order_history_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_shipping_status_order_product_image"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@mipmap/ic_launcher" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+
+
+                        <TextView
+                            android:id="@+id/tv_shipping_status_order_product_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="상품명"
+                            android:textAppearance="@style/AppTextLabel.S14.Bold" />
+
+                        <TextView
+                            android:id="@+id/tv_shipping_status_order_product_option"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="옵션"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                        <TextView
+                            android:id="@+id/tv_shipping_status_order_product_cnt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:text="10개"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                        <TextView
+                            android:id="@+id/tv_shipping_status_order_product_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:text="9,000,000 원"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:gravity="bottom"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_shipping_status_order_product_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:text="0000.00.00"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:paddingStart="10dp"
+                android:text="배송 상태"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="#FFFFFF">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_shipping_status_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

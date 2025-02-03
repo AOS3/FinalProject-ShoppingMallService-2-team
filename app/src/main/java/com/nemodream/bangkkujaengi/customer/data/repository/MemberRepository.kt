@@ -1,6 +1,7 @@
 package com.nemodream.bangkkujaengi.customer.data.repository
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nemodream.bangkkujaengi.customer.data.model.Member
 import kotlinx.coroutines.tasks.await
@@ -9,7 +10,8 @@ import javax.inject.Singleton
 
 @Singleton
 class MemberRepository @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val auth: FirebaseAuth,
 ) {
 
     // 회원 데이터 저장
@@ -59,7 +61,7 @@ class MemberRepository @Inject constructor(
         return try {
             val snapshot = firestore
                 .collection("Member")
-                .whereEqualTo("memberNickname", nickname)
+                .whereEqualTo("memberNickName", nickname)
                 .get()
                 .await()
 
@@ -153,4 +155,11 @@ class MemberRepository @Inject constructor(
         }
     }
 
+    // 익명 로그인 처리
+    suspend fun signInAnonymously(): String? = try {
+        val result = auth.signInAnonymously().await()
+        result.user?.uid
+    } catch (e: Exception) {
+        null
+    }
 }

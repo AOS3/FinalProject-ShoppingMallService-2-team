@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_my_bookmark"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/my_page_toolbar_menu"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <ImageView
+        android:id="@+id/iv_toolbar_my_bookmark_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_symbol"
+        app:layout_constraintBottom_toBottomOf="@id/tv_toolbar_my_bookmark_title"
+        app:layout_constraintEnd_toStartOf="@id/tv_toolbar_my_bookmark_title"
+        app:layout_constraintTop_toTopOf="@id/tv_toolbar_my_bookmark_title" />
+
+    <TextView
+        android:id="@+id/tv_toolbar_my_bookmark_title"
+        style="@style/AppToolbarTitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="찜"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_my_bookmark_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/ic_like_selected"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_my_bookmark" />
+
+    <TextView
+        android:id="@+id/tv_my_bookmark_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="찜"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_my_bookmark_image"
+        app:layout_constraintStart_toEndOf="@id/iv_my_bookmark_image" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_my_bookmark_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        android:paddingHorizontal="12dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_my_bookmark_image"
+        app:spanCount="3"
+        tools:listitem="@layout/item_product" />
+
+    <include
+        android:id="@+id/shimmer_my_bookmark"
+        layout="@layout/layout_favorite_product_shimmer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_my_bookmark_image" />
+</androidx.constraintlayout.widget.ConstraintLayout>

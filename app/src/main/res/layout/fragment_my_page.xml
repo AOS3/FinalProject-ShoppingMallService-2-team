@@ -1,150 +1,356 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_my_page"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/my_page_toolbar_menu" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_my_page"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/my_page_toolbar_menu" />
 
-    <ImageView
-        android:id="@+id/iv_toolbar_home_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_symbol"
-        app:layout_constraintBottom_toBottomOf="@id/tv_toolbar_home_title"
-        app:layout_constraintEnd_toStartOf="@id/tv_toolbar_home_title"
-        app:layout_constraintTop_toTopOf="@id/tv_toolbar_home_title" />
+        <ImageView
+            android:id="@+id/iv_toolbar_home_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_symbol"
+            app:layout_constraintBottom_toBottomOf="@id/tv_toolbar_home_title"
+            app:layout_constraintEnd_toStartOf="@id/tv_toolbar_home_title"
+            app:layout_constraintTop_toTopOf="@id/tv_toolbar_home_title" />
 
-    <TextView
-        android:id="@+id/tv_toolbar_home_title"
-        style="@style/AppToolbarTitleStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/label_my_page"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_toolbar_home_title"
+            style="@style/AppToolbarTitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/label_my_page"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view_my_page_login"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:background="@color/gray_100"
-        app:layout_constraintBottom_toBottomOf="@id/tv_my_page_login_sub_title"
-        app:layout_constraintEnd_toEndOf="@id/tv_my_page_login_title"
-        app:layout_constraintStart_toStartOf="@id/tv_my_page_login_title"
-        app:layout_constraintTop_toTopOf="@id/tv_my_page_login_title" />
+        <View
+            android:id="@+id/view_my_page_login"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:background="@color/gray_100"
+            app:layout_constraintBottom_toBottomOf="@id/tv_my_page_login_sub_title"
+            app:layout_constraintEnd_toEndOf="@id/tv_my_page_login_title"
+            app:layout_constraintStart_toStartOf="@id/tv_my_page_login_title"
+            app:layout_constraintTop_toTopOf="@id/tv_my_page_login_title" />
 
-    <TextView
-        android:id="@+id/tv_my_page_login_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="12dp"
-        android:text="로그인/회원가입"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_my_page" />
+        <TextView
+            android:id="@+id/tv_my_page_login_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="12dp"
+            android:text="로그인/회원가입"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_my_page" />
 
-    <TextView
-        android:id="@+id/tv_my_page_login_sub_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="지금 회원가입하면 3000원 적립금"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@id/tv_my_page_login_title"
-        app:layout_constraintStart_toStartOf="@id/tv_my_page_login_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_login_title" />
+        <TextView
+            android:id="@+id/tv_my_page_login_sub_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="지금 회원가입하면 3000원 적립금"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_my_page_login_title"
+            app:layout_constraintStart_toStartOf="@id/tv_my_page_login_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_login_title" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_my_page_non_member"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tv_my_page_login_title, tv_my_page_login_sub_title, tv_my_page_non_member_inquiry" />
+        <TextView
+            android:id="@+id/tv_my_page_non_member_inquiry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/gray_100"
+            android:paddingVertical="8dp"
+            android:text="비회원 주문조회"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_my_page_login" />
 
-    <TextView
-        android:id="@+id/tv_my_page_non_member_inquiry"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/gray_100"
-        android:paddingVertical="8dp"
-        android:text="비회원 주문조회"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_my_page_login" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider"
-        style="@style/AppDivider"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_non_member_inquiry" />
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_my_page_non_member"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="view_my_page_login, tv_my_page_login_title, tv_my_page_login_sub_title, tv_my_page_non_member_inquiry" />
 
-    <TextView
-        android:id="@+id/tv_my_page_setting"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp"
-        android:text="설정"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_my_page_profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_default_profile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_my_page"
+            app:shapeAppearanceOverlay="@style/AppRoundedImage.Circle" />
 
-    <TextView
-        android:id="@+id/tv_my_page_contact"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp"
-        android:text="1:1문의"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_setting" />
+        <TextView
+            android:id="@+id/tv_my_page_hello_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="안녕하세요"
+            app:layout_constraintStart_toEndOf="@id/iv_my_page_profile_image"
+            app:layout_constraintTop_toTopOf="@id/iv_my_page_profile_image" />
 
-    <TextView
-        android:id="@+id/tv_my_page_center"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp"
-        android:text="고객센터"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_contact" />
+        <ImageView
+            android:id="@+id/iv_my_page_social_kakao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:src="@drawable/ic_kakao_talk_logo"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tv_my_page_hello_label"
+            app:layout_constraintStart_toEndOf="@id/tv_my_page_hello_label"
+            app:layout_constraintTop_toTopOf="@id/tv_my_page_hello_label" />
 
-    <TextView
-        android:id="@+id/tv_my_page_notice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="20dp"
-        android:text="공지사항"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_center" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_my_page_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/tv_my_page_hello_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_hello_label"
+            tools:text="000님" />
+
+        <EditText
+            android:id="@+id/et_my_profile_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/tv_my_page_hello_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_hello_label" />
+
+        <ImageView
+            android:id="@+id/btn_profile_name_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_edit_24px"
+            app:layout_constraintBottom_toBottomOf="@id/tv_my_page_profile_name"
+            app:layout_constraintStart_toEndOf="@id/tv_my_page_profile_name"
+            app:layout_constraintTop_toTopOf="@id/tv_my_page_profile_name" />
+
+        <Button
+            android:id="@+id/btn_social_my_save_edit"
+            style="@style/FollowingButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="2dp"
+            android:text="완료"
+            android:textSize="9sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/et_my_profile_nickname"
+            app:layout_constraintStart_toEndOf="@id/et_my_profile_nickname"
+            app:layout_constraintTop_toTopOf="@id/et_my_profile_nickname" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/my_page_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="28dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_my_page_profile_image">
+
+            <include
+                android:id="@+id/my_page_order"
+                layout="@layout/view_my_page_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/my_page_review"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <include
+                android:id="@+id/my_page_review"
+                layout="@layout/view_my_page_review"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/my_page_coupon"
+                app:layout_constraintStart_toEndOf="@id/my_page_order"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/my_page_coupon"
+                layout="@layout/view_my_page_coupon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/my_page_reserve"
+                app:layout_constraintStart_toEndOf="@id/my_page_review"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/my_page_reserve"
+                layout="@layout/view_my_page_reserve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/my_page_bookmark"
+                app:layout_constraintStart_toEndOf="@id/my_page_coupon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/my_page_bookmark"
+                layout="@layout/view_my_page_bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/my_page_reserve"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_my_page_member"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="iv_my_page_profile_image, tv_my_page_hello_label, tv_my_page_profile_name, my_page_container, btn_profile_name_edit, et_my_profile_nickname" />
+
+        <TextView
+            android:id="@+id/tv_recent_view_product_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="124dp"
+            android:text="최근 본 상품"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_non_member_inquiry" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_recent_view_product"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_recent_view_product_label"
+            tools:listitem="@layout/item_promotion" />
+
+        <include
+            android:id="@+id/shimmer_layout"
+            layout="@layout/layout_recent_view_shimmer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_recent_view_product_label" />
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            style="@style/AppDivider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="320dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_recent_view_product_label" />
+
+        <TextView
+            android:id="@+id/tv_my_page_setting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="20dp"
+            android:text="설정"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <TextView
+            android:id="@+id/tv_my_page_contact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="20dp"
+            android:text="1:1문의"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_setting" />
+
+        <TextView
+            android:id="@+id/tv_my_page_center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="20dp"
+            android:text="FAQ"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_contact" />
+
+        <TextView
+            android:id="@+id/tv_my_page_notice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="20dp"
+            android:text="공지사항"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_center" />
+
+        <TextView
+            android:id="@+id/tv_my_page_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="20dp"
+            android:text="로그아웃"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_notice" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

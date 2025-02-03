@@ -6,7 +6,9 @@
     android:layout_margin="10dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="@android:color/transparent">
+    app:cardBackgroundColor="@android:color/transparent"
+    android:clickable="true"
+    android:focusable="true">
 
     <RelativeLayout
         android:layout_width="match_parent"

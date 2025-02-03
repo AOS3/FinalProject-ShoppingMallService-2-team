@@ -1,0 +1,5 @@
+<!-- res/drawable/rounded_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#B4ffffff"/>
+    <corners android:radius="8dp"/> <!-- 둥근 모서리 설정 -->
+</shape>

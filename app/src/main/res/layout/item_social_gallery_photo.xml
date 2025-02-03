@@ -21,4 +21,18 @@
         android:layout_gravity="top|start"
         android:visibility="visible" />
 
+    <!-- 선택 순서 표시 -->
+    <TextView
+        android:id="@+id/tv_selection_order"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="top|start"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:text="8"
+        android:visibility="gone" />
+
+
 </FrameLayout>

@@ -1,14 +1,11 @@
 package com.nemodream.bangkkujaengi.customer.ui.adapter
 
-import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.nemodream.bangkkujaengi.customer.data.model.Coupon
 import com.nemodream.bangkkujaengi.customer.data.model.CouponType
-import com.nemodream.bangkkujaengi.customer.data.model.Promotion
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.PaymentCouponBottomSheetViewModel
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.RowPaymentCouponRecyclerviewViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentPaymentCouponBottomeSheetBinding

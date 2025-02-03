@@ -1,5 +1,6 @@
 package com.nemodream.bangkkujaengi.customer.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
@@ -21,4 +22,9 @@ class FirebaseModule {
     @Singleton
     fun provideStorage(): FirebaseStorage =
         FirebaseStorage.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideAuth(): FirebaseAuth =
+        FirebaseAuth.getInstance()
 }

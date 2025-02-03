@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="30dp"
+    android:background="@android:color/white"
     tools:context=".SignInActivity">
 
     <!-- Logo -->
@@ -41,6 +42,7 @@
         android:layout_marginTop="10dp"
         android:text="소개"
         android:textAlignment="center"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_sign_in_app_name" />
@@ -48,6 +50,7 @@
     <!-- User ID Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tf_sign_in_user_id"
+        style="@style/CustomTextInputStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -67,6 +70,7 @@
     <!-- Password Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tf_sign_in_user_pw"
+        style="@style/CustomTextInputStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -132,22 +136,19 @@
         android:enabled="true"
         android:text="로그인"
         android:textColor="@drawable/button_text_color"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_sign_in_ask" />
 
     <!-- Kakao Login Button -->
-    <Button
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_sign_in_kakao_login"
         android:layout_width="0dp"
-        android:layout_height="55dp"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:backgroundTint="#FDE200"
-        android:text="카카오 로그인"
-        android:textColor="#332728"
-        app:cornerRadius="6dp"
-        app:icon="@drawable/ic_symbol"
-        app:iconTint="#332728"
+        android:background="@drawable/kakao_login_large_wide"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_sign_in_login" />

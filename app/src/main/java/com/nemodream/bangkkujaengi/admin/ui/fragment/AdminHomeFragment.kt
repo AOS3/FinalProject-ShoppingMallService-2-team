@@ -45,7 +45,10 @@ class AdminHomeFragment: Fragment() {
                 val action = AdminHomeFragmentDirections.actionAdminHomeFragmentToAdminCouponFragment()
                 findNavController().navigate(action)
             }
-            btnManageOrder.root.setOnClickListener {}
+            btnManageOrder.root.setOnClickListener {
+                val action = AdminHomeFragmentDirections.actionAdminHomeFragmentToAdminOrderFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 }

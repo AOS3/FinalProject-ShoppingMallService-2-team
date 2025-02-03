@@ -5,12 +5,18 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.nemodream.bangkkujaengi.customer.data.model.Member
 import com.nemodream.bangkkujaengi.databinding.RowSocialFollowingAllBinding
 import com.nemodream.bangkkujaengi.utils.loadImage
 
-class SocialFollowingAllAdapter : RecyclerView.Adapter<SocialFollowingAllAdapter.SocialFollowingAllViewHolder>() {
+class SocialFollowingAllAdapter(
+    private val currentUserDocId: String,
+    private val firestore: FirebaseFirestore
+) : RecyclerView.Adapter<SocialFollowingAllAdapter.SocialFollowingAllViewHolder>() {
     private val items = mutableListOf<Member>()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SocialFollowingAllViewHolder {
         val binding = RowSocialFollowingAllBinding.inflate(
@@ -35,7 +41,7 @@ class SocialFollowingAllAdapter : RecyclerView.Adapter<SocialFollowingAllAdapter
         return items.size
     }
 
-    class SocialFollowingAllViewHolder(private val binding: RowSocialFollowingAllBinding) :
+    inner class SocialFollowingAllViewHolder(private val binding: RowSocialFollowingAllBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private var isFollowing = true
 
@@ -52,9 +58,11 @@ class SocialFollowingAllAdapter : RecyclerView.Adapter<SocialFollowingAllAdapter
                 updateButtonState(isFollowing)
 
                 if (isFollowing) {
-                    // 팔로우 목록에 멤버 추가 (나중에 구현 예정)
+                    // 팔로우 동작 호출
+                    followMember(member.id)
                 } else {
-                    // 팔로우 목록에서 멤버 제거 (나중에 구현 예정)
+                    // 언팔로우 동작 호출
+                    unfollowMember(member.id)
                 }
             }
         }
@@ -78,6 +86,56 @@ class SocialFollowingAllAdapter : RecyclerView.Adapter<SocialFollowingAllAdapter
                 binding.btnFollowingAllFollowing.strokeColor =
                     ColorStateList.valueOf(Color.parseColor("#000000")) // 테두리 색상 (기본값, 변경 가능)
                 binding.btnFollowingAllFollowing.strokeWidth = 1 // 테두리 두께 (px 단위)
+            }
+        }
+
+        private fun followMember(memberId: String) {
+            val memberRef = firestore.collection("Member").document(memberId)
+            val currentUserRef = firestore.collection("Member").document(currentUserDocId)
+
+            firestore.runBatch { batch ->
+                // 현재 유저의 followingCount 증가 및 followingList 업데이트
+                batch.update(
+                    currentUserRef,
+                    mapOf(
+                        "followingCount" to FieldValue.increment(1),
+                        "followingList" to FieldValue.arrayUnion(memberRef)
+                    )
+                )
+
+                // 상대방 유저의 followerCount 증가
+                batch.update(
+                    memberRef,
+                    "followerCount",
+                    FieldValue.increment(1)
+                )
+            }.addOnFailureListener { e ->
+                e.printStackTrace()
+            }
+        }
+
+        private fun unfollowMember(memberId: String) {
+            val memberRef = firestore.collection("Member").document(memberId)
+            val currentUserRef = firestore.collection("Member").document(currentUserDocId)
+
+            firestore.runBatch { batch ->
+                // 현재 유저의 followingCount 감소 및 followingList 업데이트
+                batch.update(
+                    currentUserRef,
+                    mapOf(
+                        "followingCount" to FieldValue.increment(-1),
+                        "followingList" to FieldValue.arrayRemove(memberRef)
+                    )
+                )
+
+                // 상대방 유저의 followerCount 감소
+                batch.update(
+                    memberRef,
+                    "followerCount",
+                    FieldValue.increment(-1)
+                )
+            }.addOnFailureListener { e ->
+                e.printStackTrace()
             }
         }
     }

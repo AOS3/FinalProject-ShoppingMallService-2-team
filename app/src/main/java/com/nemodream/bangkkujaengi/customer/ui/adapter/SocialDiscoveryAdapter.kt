@@ -23,7 +23,7 @@ class SocialDiscoveryAdapter(
     }
 
     override fun onBindViewHolder(holder: SocialDiscoveryViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], listener)
     }
 
     fun submitList(socialDiscoveryItems: List<Post>) {
@@ -38,7 +38,7 @@ class SocialDiscoveryAdapter(
 
     class SocialDiscoveryViewHolder(private val binding: ItemSocialPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: Post) {
+        fun bind(post: Post, listener: OnPostItemClickListener) {
             binding.ivSocialPostItemThumbnail.loadImage(post.imageList[0])
             binding.tvSocialPostItemTitle.text = post.title
             binding.ivSocialPostItemProfilePicture.loadImage(post.authorProfilePicture)
@@ -51,6 +51,11 @@ class SocialDiscoveryAdapter(
                 binding.tvRankBadge.text = post.rank.toString()
             } else {
                 binding.tvRankBadge.visibility = View.GONE
+            }
+
+            // 클릭 이벤트 설정
+            binding.root.setOnClickListener {
+                listener.onPostItemClick(post)
             }
         }
     }
