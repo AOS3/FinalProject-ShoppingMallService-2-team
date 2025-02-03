@@ -196,20 +196,31 @@ class PaymentRepository {
 
 
         // 구매 항목 저장 메서드
-        suspend fun add_purchase_product(purchase_product: MutableList<Purchase>) {
+        fun add_purchase_product(purchases: List<Purchase>, callback: (Boolean, String?) -> Unit) {
             val firestore = FirebaseFirestore.getInstance()
-            val collectionReference = firestore.collection("Purchase")
+            val collection = firestore.collection("Purchase")
 
-            try {
-                // Firestore에 구매 항목 저장
-                purchase_product.forEach { purchase ->
-                    collectionReference.add(purchase).await()
-                    Log.d("PurchaseSave", "Added purchase: $purchase")
-                }
-            } catch (e: Exception) {
-                // 에러 처리
-                Log.e("FirestoreError", "Error adding purchase product: ${e.message}", e)
+            purchases.forEach { purchase ->
+                // Firestore에 문서 추가 (문서 ID 자동 생성)
+                collection.add(purchase)
+                    .addOnSuccessListener { documentReference ->
+                        // 생성된 문서 ID를 Purchase 객체의 documentId 필드에 업데이트
+                        val documentId = documentReference.id
+                        collection.document(documentId).update("documentId", documentId)
+                            .addOnSuccessListener {
+                                Log.d("PurchaseSave", "Added purchase with ID: $documentId")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("FirestoreError", "Error updating documentId: ${e.message}", e)
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("FirestoreError", "Error adding purchase: ${e.message}", e)
+                        callback(false, e.message)
+                    }
             }
+
+            callback(true, null)
         }
 
         // 유저 id로 유저 아이디 찾기
