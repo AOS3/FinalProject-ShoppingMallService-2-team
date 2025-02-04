@@ -224,6 +224,7 @@
         android:id="@+id/commentInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintStart_toStartOf="parent"
