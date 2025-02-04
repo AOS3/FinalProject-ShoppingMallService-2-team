@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.nemodream.bangkkujaengi.R
-import com.nemodream.bangkkujaengi.databinding.FragmentMyReviewWriteBinding
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.MyReviewWriteViewModel
+import com.nemodream.bangkkujaengi.databinding.FragmentMyReviewWriteBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
 import com.nemodream.bangkkujaengi.utils.loadImage
+import com.nemodream.bangkkujaengi.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -109,11 +108,11 @@ class MyReviewWriteFragment : Fragment() {
 
         viewModel.reviewSubmitResult.observe(viewLifecycleOwner) { result ->
             if (result) {
-                Toast.makeText(requireContext(), "리뷰가 성공적으로 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root , "리뷰가 성공적으로 저장되었습니다.")
                 binding.btnReviewSubmit.isEnabled = false  // 저장 성공 후 비활성화 유지
                 findNavController().popBackStack()
             } else {
-                Toast.makeText(requireContext(), "리뷰 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                requireContext().showSnackBar(binding.root , "리뷰 저장에 실패했습니다")
             }
         }
     }

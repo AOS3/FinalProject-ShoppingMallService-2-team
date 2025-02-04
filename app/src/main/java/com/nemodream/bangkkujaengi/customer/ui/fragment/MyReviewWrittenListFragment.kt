@@ -14,6 +14,7 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.ReviewWrittenListAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.MyReviewWrittenListViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentMyReviewWrittenListBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,8 +63,7 @@ class MyReviewWrittenListFragment : Fragment() {
         if (documentId.isNotEmpty()) {
             viewModel.loadWrittenReviews(documentId)
         } else {
-            // 로그인 정보가 없을 때 토스트 메시지 표시
-            Toast.makeText(requireContext(), "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+            requireContext().showSnackBar(binding.root, "로그인 정보가 없습니다.")
         }
     }
 

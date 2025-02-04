@@ -16,6 +16,7 @@ import com.nemodream.bangkkujaengi.customer.ui.adapter.ReviewWriteListAdapter
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.MyReviewWriteListViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentMyReviewWriteListBinding
 import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -74,12 +75,10 @@ class MyReviewWriteListFragment : Fragment() {
     private fun navigateToWriteReviewFragment(productId: String) {
         val action = MyReviewFragmentDirections.actionMyReviewWriteListFragmentToMyReviewWriteFragment(productId)
         findNavController().navigate(action)
-
-        Toast.makeText(requireContext(), "$productId 리뷰 작성으로 이동합니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        requireContext().showSnackBar(binding.root, message)
     }
 
     private fun showNoReviewsScreen(message: String) {
