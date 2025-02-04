@@ -5,20 +5,33 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nemodream.bangkkujaengi.R
+import com.nemodream.bangkkujaengi.customer.data.model.Member
+import com.nemodream.bangkkujaengi.customer.data.model.PaymentItems
+import com.nemodream.bangkkujaengi.customer.data.model.PaymentProduct
 import com.nemodream.bangkkujaengi.customer.data.model.Product
+import com.nemodream.bangkkujaengi.customer.data.repository.ShoppingCartRepository
 import com.nemodream.bangkkujaengi.customer.ui.custom.CustomDialog
 import com.nemodream.bangkkujaengi.customer.ui.viewmodel.ProductDetailViewModel
 import com.nemodream.bangkkujaengi.databinding.FragmentProductOrderBottomSheetBinding
+import com.nemodream.bangkkujaengi.utils.getUserId
+import com.nemodream.bangkkujaengi.utils.getUserType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ProductOrderBottomSheetFragment : BottomSheetDialogFragment() {
@@ -128,14 +141,92 @@ class ProductOrderBottomSheetFragment : BottomSheetDialogFragment() {
                     return@setOnClickListener
                 }
                 // 장바구니 정보 저장하는 함수
-                viewModel.saveCartProduct(product.productId)
-                showActionDialog()
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val userType = requireContext().getUserType()
+                    val userId = if (userType == "member") {
+                        withContext(Dispatchers.IO) {
+                            ShoppingCartRepository.getting_user_id_by_document_id(requireContext().getUserId())
+                        }
+                    } else {
+                        requireContext().getUserId()
+                    }
+                    Log.d("test1213", "setting_user_id: $userId")
+
+                    val work1 = withContext(Dispatchers.IO) {
+                        ShoppingCartRepository.add_cart_item_by_product_id(
+                            userId,
+                            product.productId,
+                            viewModel.quantity.value!!,
+                            viewModel.selectedColor.value!!,
+                        )
+                    }
+
+                    showActionDialog()
+                }
             }
 
             // 주문하기 버튼 클릭 리스너
             btnOrder.setOnClickListener {
+                var user_id = ""
+                var user_type = requireContext().getUserType()
+                when(user_type) {
+                    "member" -> {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            val work1 = async(Dispatchers.IO) {
+                                ShoppingCartRepository.getting_user_id_by_document_id(requireContext().getUserId())
+                            }
+                            user_id = work1.await()
+                            Log.d("test1213", "setting_user_id: ${user_id}")
+                        }
+                    }
+                    "guest" -> {
+                        user_id = requireContext().getUserId()
+                        Log.d("test1213", "setting_user_id: ${user_id}")
+                    }
+                    else -> {
+                        ""
+                    }
+                }
+
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val work1 = async(Dispatchers.IO) {
+                        ShoppingCartRepository.getting_user_data_by_user_id(user_id)
+                    }
+                    val user_data = work1.await()
+
+                    val memberData = user_data?.get("member_data") as? Member
+
+                    Log.d("user_data", "${memberData?.memberPhoneNumber}")
+
+                    val productData = PaymentProduct(
+                        items = listOf(
+                            PaymentItems(
+                                productId = product.productId, // 원하는 상품 ID
+                                color = viewModel.selectedColor.value!!,                // 원하는 색상
+                                quantity = viewModel.quantity.value!!,                 // 원하는 수량
+                                checked = true               // 선택 여부 (예: false)
+                            )
+                        ),
+                        userId = user_id // 실제 사용자 ID
+                    )
+
+                    Log.d("123123asdasd", memberData?.memberName.toString(),)
+
+                    // 예시: 글로벌 액션을 사용하여 PaymentFragment로 네비게이트
+                    val action = ProductOrderBottomSheetFragmentDirections.actionGlobalPaymentFragment(
+                        user_id,
+                        user_type,
+                        memberData?.memberName.toString(),
+                        memberData?.memberPhoneNumber.toString(),
+                        "서울시 강남구 역삼동",
+                        "order",
+                        productData
+                    )
+                    findNavController().navigate(action)
+
+                }
                 // TODO: 주문 처리 로직 구현
-                dismiss()
+                // dismiss()
             }
 
             // 수량 증가 버튼

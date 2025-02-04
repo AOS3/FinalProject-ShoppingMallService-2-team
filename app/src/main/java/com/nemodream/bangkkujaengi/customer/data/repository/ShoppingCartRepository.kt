@@ -88,51 +88,112 @@ class ShoppingCartRepository {
         }
 
         // test
-        suspend fun add_cart_items_by_product_ids(user_id: String) {
+//        suspend fun add_cart_items_by_product_ids(user_id: String) {
+//            Log.d("add_cart_item", "여기옴")
+//            val firestore = FirebaseFirestore.getInstance()
+//            val collectionReference = firestore.collection("Cart")
+//            val result = collectionReference.whereEqualTo("userId", user_id).get().await()
+//
+//            val product_id_list = listOf("AxXC1DVb8zsE92nyit8N", "L0JpdVtcyvEkbHMM0Oms", "NI7Dn3p4s1wgzwO7DKWq", "e4L8vI6zDw9iQdObqqIo", "qHwOL6xAsO5JOTdLlBd2")
+//
+//            // 장바구니가 이미 존재하는지 확인
+//            if (result.isEmpty) {
+//                // 장바구니가 없으면 새로운 장바구니를 생성하고 모든 상품을 추가
+//                val newItems = product_id_list.map { productId ->
+//                    Cart(productId = productId, quantity = 1, checked = false)
+//                }
+//                val newCart = ShoppingCart(
+//                    userId = user_id,
+//                    items = newItems
+//                )
+//                collectionReference.add(newCart).await()
+//                Log.d("add_cart_item", "New cart created and products added for user: $user_id")
+//            } else {
+//                // 기존 장바구니에 상품 추가
+//                val documentReference = result.documents.first().reference
+//                val shoppingCart = result.documents.first().toObject(ShoppingCart::class.java)
+//
+//                // 기존 items 리스트에 새 상품 추가
+//                val updatedItems = shoppingCart?.items?.toMutableList() ?: mutableListOf()
+//
+//                product_id_list.forEach { productIdToAdd ->
+//                    val existingItem = updatedItems.find { it.productId == productIdToAdd }
+//                    if (existingItem != null) {
+//                        // 이미 존재하는 상품인 경우 수량 증가
+//                        existingItem.quantity += 1
+//                    } else {
+//                        // 새로운 상품인 경우 추가
+//                        updatedItems.add(Cart(productId = productIdToAdd, quantity = 1, checked = false))
+//                    }
+//                }
+//
+//                // Firestore에 업데이트
+//                val updateMap = mapOf("items" to updatedItems.map { it.copy() }) // 복사본으로 Firestore 업데이트
+//                documentReference.update(updateMap).await()
+//                Log.d("add_cart_item", "Products added/updated in cart for user: $user_id")
+//            }
+//        }
+
+        suspend fun add_cart_item_by_product_id(
+            user_id: String,
+            productId: String,
+            quantity: Int,
+            color: String
+        ) {
             Log.d("add_cart_item", "여기옴")
             val firestore = FirebaseFirestore.getInstance()
             val collectionReference = firestore.collection("Cart")
-            val result = collectionReference.whereEqualTo("userId", user_id).get().await()
 
-            val product_id_list = listOf("AxXC1DVb8zsE92nyit8N", "L0JpdVtcyvEkbHMM0Oms", "NI7Dn3p4s1wgzwO7DKWq", "e4L8vI6zDw9iQdObqqIo", "qHwOL6xAsO5JOTdLlBd2")
+            // userId 필드가 user_id와 일치하는 문서를 조회
+            val querySnapshot = collectionReference
+                .whereEqualTo("userId", user_id)
+                .get()
+                .await()
 
-            // 장바구니가 이미 존재하는지 확인
-            if (result.isEmpty) {
-                // 장바구니가 없으면 새로운 장바구니를 생성하고 모든 상품을 추가
-                val newItems = product_id_list.map { productId ->
-                    Cart(productId = productId, quantity = 1, checked = false)
-                }
+            if (querySnapshot.isEmpty) {
+                // 해당 사용자의 Cart 문서가 없으면 새로 생성 (문서 id는 자동 생성됨)
+                val newItem = Cart(
+                    productId = productId,
+                    quantity = quantity,
+                    color = color,
+                    checked = false
+                )
                 val newCart = ShoppingCart(
                     userId = user_id,
-                    items = newItems
+                    items = listOf(newItem)
                 )
                 collectionReference.add(newCart).await()
-                Log.d("add_cart_item", "New cart created and products added for user: $user_id")
+                Log.d("add_cart_item", "New cart created for user: $user_id")
             } else {
-                // 기존 장바구니에 상품 추가
-                val documentReference = result.documents.first().reference
-                val shoppingCart = result.documents.first().toObject(ShoppingCart::class.java)
-
-                // 기존 items 리스트에 새 상품 추가
+                // 이미 해당 사용자의 Cart 문서가 있으면 첫 번째 문서를 업데이트
+                val documentReference = querySnapshot.documents.first().reference
+                val shoppingCart = querySnapshot.documents.first().toObject(ShoppingCart::class.java)
                 val updatedItems = shoppingCart?.items?.toMutableList() ?: mutableListOf()
 
-                product_id_list.forEach { productIdToAdd ->
-                    val existingItem = updatedItems.find { it.productId == productIdToAdd }
-                    if (existingItem != null) {
-                        // 이미 존재하는 상품인 경우 수량 증가
-                        existingItem.quantity += 1
-                    } else {
-                        // 새로운 상품인 경우 추가
-                        updatedItems.add(Cart(productId = productIdToAdd, quantity = 1, checked = false))
+                // 동일한 productId가 있는지 확인 후, 있으면 수량 증가, 없으면 새 항목 추가
+                val existingItem = updatedItems.find { it.productId == productId }
+                if (existingItem != null) {
+                    existingItem.quantity += quantity
+                    if (color.isNotEmpty()) {
+                        existingItem.color = color
                     }
+                } else {
+                    updatedItems.add(
+                        Cart(
+                            productId = productId,
+                            quantity = quantity,
+                            color = color,
+                            checked = false
+                        )
+                    )
                 }
-
-                // Firestore에 업데이트
-                val updateMap = mapOf("items" to updatedItems.map { it.copy() }) // 복사본으로 Firestore 업데이트
-                documentReference.update(updateMap).await()
-                Log.d("add_cart_item", "Products added/updated in cart for user: $user_id")
+                documentReference.update("items", updatedItems).await()
+                Log.d("add_cart_item", "Cart updated for user: $user_id")
             }
         }
+
+
+
 
         // 장바구니 아이템 갯수 업데이트
         suspend fun update_cart_item_quantity(userId: String, productId: String, quantity: Int) {

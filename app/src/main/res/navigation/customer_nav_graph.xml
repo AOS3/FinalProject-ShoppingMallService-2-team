@@ -234,7 +234,12 @@
         android:id="@+id/productOrderBottomSheetFragment"
         android:name="com.nemodream.bangkkujaengi.customer.ui.fragment.ProductOrderBottomSheetFragment"
         android:label="ProductOrderBottomSheetFragment"
-        tools:layout="@layout/fragment_product_order_bottom_sheet" />
+        tools:layout="@layout/fragment_product_order_bottom_sheet">
+
+        <action
+            android:id="@+id/action_navigation_cart_to_paymentFragment"
+            app:destination="@id/paymentFragment" />
+    </dialog>
 
 
     <fragment
@@ -405,4 +410,9 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+
+    <!-- 전역 액션(Global Action) 정의: 어느 화면에서든 PaymentFragment로 이동 가능 -->
+    <action
+        android:id="@+id/action_global_paymentFragment"
+        app:destination="@id/paymentFragment" />
 </navigation>
