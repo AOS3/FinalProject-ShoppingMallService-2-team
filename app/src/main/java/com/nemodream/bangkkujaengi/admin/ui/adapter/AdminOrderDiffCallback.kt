@@ -13,10 +13,12 @@ class AdminOrderDiffCallback(
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].orderNumber == newList[newItemPosition].orderNumber
+        // 문서 ID를 기준으로 동일 항목인지 확인
+        return oldList[oldItemPosition].documentId == newList[newItemPosition].documentId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        // 항목의 내용이 동일한지 확인
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
