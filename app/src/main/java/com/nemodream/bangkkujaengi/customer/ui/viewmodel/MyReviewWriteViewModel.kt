@@ -80,9 +80,15 @@ class MyReviewWriteViewModel @Inject constructor(
         viewModelScope.launch {
             _isSubmitting.value = true  // 리뷰 저장 중 상태로 변경
 
-            // 사용자 정보 가져오기 (닉네임과 프로필 이미지 포함)
-            val memberInfoMap = repository.fetchNicknamesWithProfileImage(listOf(documentId))
-            val memberData = memberInfoMap[documentId]
+            // memberId 조회
+            val memberId = repository.fetchMemberId(documentId) ?: run {
+                _reviewSubmitResult.value = false
+                _isSubmitting.value = false
+                return@launch
+            }
+
+            val memberInfoMap = repository.fetchNicknamesWithProfileImage(listOf(memberId))
+            val memberData = memberInfoMap[memberId]
 
             if (memberData == null) {
                 _reviewSubmitResult.value = false
@@ -91,8 +97,6 @@ class MyReviewWriteViewModel @Inject constructor(
             }
 
             val (nickname, profileImage) = memberData
-
-            // 리뷰 객체 생성
             val review = Review(
                 id = "",
                 productId = productId,
@@ -100,28 +104,24 @@ class MyReviewWriteViewModel @Inject constructor(
                 productImageUrl = _productImageUrl.value ?: "",
                 reviewDate = getCurrentDate(),
                 rating = _rating.value ?: 0,
-                memberId = documentId,
+                memberId = memberId,
                 memberNickname = nickname,
                 memberProfileImage = profileImage,
                 content = _reviewContent.value ?: "",
                 isDelete = false
             )
 
-            // 리뷰 저장
             val reviewResult = repository.submitReview(review)
             if (reviewResult) {
-                // 상태 업데이트
-                val updateResult = repository.updateReviewState(productId, documentId)
+                val updateResult = repository.updateReviewState(productId, memberId)
                 _reviewSubmitResult.value = updateResult
             } else {
                 _reviewSubmitResult.value = false
             }
 
-            _isSubmitting.value = false  // 작업 완료 후 상태 변경
+            _isSubmitting.value = false
         }
     }
-
-
 
     // 현재 날짜를 문자열로 변환
     private fun getCurrentDate(): String {

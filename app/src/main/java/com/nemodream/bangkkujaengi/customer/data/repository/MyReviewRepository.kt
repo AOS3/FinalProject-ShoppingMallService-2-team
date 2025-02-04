@@ -65,16 +65,13 @@ class MyReviewRepository @Inject constructor(
 
     suspend fun submitReview(review: Review): Boolean {
         return try {
-            // 리뷰 문서 ID가 없으면 Firestore에서 새 문서 ID 생성
             val reviewId = if (review.id.isEmpty()) firestore.collection("Reviews").document().id else review.id
-
             firestore.collection("Reviews")
                 .document(reviewId)
                 .set(review.copy(id = reviewId))
                 .await()
             true
         } catch (e: Exception) {
-            e.printStackTrace()
             false
         }
     }
@@ -114,14 +111,17 @@ class MyReviewRepository @Inject constructor(
 
             if (!purchaseQuery.isEmpty) {
                 val documentId = purchaseQuery.documents[0].id
+
                 firestore.collection("Purchase")
                     .document(documentId)
-                    .update("reviewState", "WRITTEN")  // 상태 변경
+                    .update("reviewState", "WRITTEN")
                     .await()
-                true
+
+                return true
             } else {
-                false
+                return false
             }
+
         } catch (e: Exception) {
             e.printStackTrace()
             false
@@ -192,14 +192,14 @@ class MyReviewRepository @Inject constructor(
     suspend fun fetchNicknamesWithProfileImage(memberIds: List<String>): Map<String, Pair<String, String>> {
         return try {
             val documents = firestore.collection("Member")
-                .whereIn("memberId", memberIds)
+                .whereEqualTo("memberId", memberIds.first())
                 .get()
                 .await()
 
             documents.associate { doc ->
-                val memberId = doc.getString("memberId")!!
+                val memberId = doc.getString("memberId") ?: ""
                 val nickname = doc.getString("memberNickName") ?: "닉네임 없음"
-                val profileImage = doc.getString("memberProfileImage") ?: "https://www.studiopeople.kr/common/img/default_profile.png"
+                val profileImage = doc.getString("memberProfileImage") ?: ""
                 memberId to (nickname to profileImage)
             }
         } catch (e: Exception) {
@@ -207,6 +207,4 @@ class MyReviewRepository @Inject constructor(
             emptyMap()
         }
     }
-
-
 }
