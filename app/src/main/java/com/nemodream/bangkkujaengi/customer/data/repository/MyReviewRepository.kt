@@ -192,14 +192,14 @@ class MyReviewRepository @Inject constructor(
     suspend fun fetchNicknamesWithProfileImage(memberIds: List<String>): Map<String, Pair<String, String>> {
         return try {
             val documents = firestore.collection("Member")
-                .whereEqualTo("memberId", memberIds.first())
+                .whereIn("memberId", memberIds)
                 .get()
                 .await()
 
             documents.associate { doc ->
-                val memberId = doc.getString("memberId") ?: ""
+                val memberId = doc.getString("memberId")!!
                 val nickname = doc.getString("memberNickName") ?: "닉네임 없음"
-                val profileImage = doc.getString("memberProfileImage") ?: ""
+                val profileImage = doc.getString("memberProfileImage") ?: "https://www.studiopeople.kr/common/img/default_profile.png"
                 memberId to (nickname to profileImage)
             }
         } catch (e: Exception) {
