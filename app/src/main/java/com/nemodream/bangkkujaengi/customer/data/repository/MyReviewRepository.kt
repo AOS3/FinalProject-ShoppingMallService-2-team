@@ -65,16 +65,13 @@ class MyReviewRepository @Inject constructor(
 
     suspend fun submitReview(review: Review): Boolean {
         return try {
-            // 리뷰 문서 ID가 없으면 Firestore에서 새 문서 ID 생성
             val reviewId = if (review.id.isEmpty()) firestore.collection("Reviews").document().id else review.id
-
             firestore.collection("Reviews")
                 .document(reviewId)
                 .set(review.copy(id = reviewId))
                 .await()
             true
         } catch (e: Exception) {
-            e.printStackTrace()
             false
         }
     }
@@ -114,14 +111,17 @@ class MyReviewRepository @Inject constructor(
 
             if (!purchaseQuery.isEmpty) {
                 val documentId = purchaseQuery.documents[0].id
+
                 firestore.collection("Purchase")
                     .document(documentId)
-                    .update("reviewState", "WRITTEN")  // 상태 변경
+                    .update("reviewState", "WRITTEN")
                     .await()
-                true
+
+                return true
             } else {
-                false
+                return false
             }
+
         } catch (e: Exception) {
             e.printStackTrace()
             false
@@ -207,6 +207,4 @@ class MyReviewRepository @Inject constructor(
             emptyMap()
         }
     }
-
-
 }

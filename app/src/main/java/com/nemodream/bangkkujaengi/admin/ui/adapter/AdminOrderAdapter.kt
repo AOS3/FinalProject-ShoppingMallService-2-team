@@ -1,5 +1,6 @@
 package com.nemodream.bangkkujaengi.admin.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,12 @@ import com.nemodream.bangkkujaengi.admin.data.model.Order
 import com.nemodream.bangkkujaengi.databinding.RowPaymentCompletedBinding
 
 class AdminOrderAdapter(
-    private var orders: List<Order>,          // 주문 데이터
-    private val viewType: OrderViewType,      // 화면 타입에 따라 다르게 표시
-    private val onActionClick: (Order) -> Unit, // 다음 상태 버튼 클릭 이벤트 처리
-    private val onCancelClick: (Order) -> Unit, // 취소 버튼 클릭 이벤트 처리
-    private val isOrderSelected: (String) -> Boolean,
-    private val onOrderCheckedChange: (String, Boolean) -> Unit
+    private var orders: List<Order>,
+    private val viewType: OrderViewType,
+    private val onActionClick: (Order) -> Unit,
+    private val onCancelClick: (Order) -> Unit,
+    private val isOrderSelected: (String) -> Boolean,         // documentId 사용
+    private val onOrderCheckedChange: (String, Boolean) -> Unit // documentId 사용
 ) : RecyclerView.Adapter<AdminOrderAdapter.OrderViewHolder>() {
 
     inner class OrderViewHolder(val binding: RowPaymentCompletedBinding) : RecyclerView.ViewHolder(binding.root)
@@ -26,6 +27,10 @@ class AdminOrderAdapter(
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
+
+        // 디버깅 로그 추가
+        Log.d("BindViewHolder", "Binding order: ${order.documentId}, Checkbox should be: ${isOrderSelected(order.documentId)}")
+
         with(holder.binding) {
             // 기존 리스너 제거 및 상태 초기화
             cbRowPcSelect.setOnCheckedChangeListener(null)
@@ -37,17 +42,19 @@ class AdminOrderAdapter(
                 OrderViewType.CANCELED -> false
                 else -> true
             }
+
+            // 체크박스 상태 설정
             cbRowPcSelect.isEnabled = isCheckboxEnabled
             cbRowPcSelect.isChecked = if (isCheckboxEnabled) {
-                order.orderNumber?.let { isOrderSelected(it) } ?: false
+                isOrderSelected(order.documentId)
             } else {
                 false
             }
 
+            // 체크박스 리스너 설정
             cbRowPcSelect.setOnCheckedChangeListener { _, isChecked ->
-                if (isCheckboxEnabled) {
-                    order.orderNumber?.let { onOrderCheckedChange(it, isChecked) }
-                }
+                onOrderCheckedChange(order.documentId, isChecked)
+                Log.d("BindViewHolder", "Checkbox changed: $isChecked for order ${order.documentId}")
             }
 
             // 필드 설정
@@ -106,7 +113,6 @@ class AdminOrderAdapter(
                     tvRowPcInvoiceNumber.visibility = View.VISIBLE
                     tvRowPcInvoiceNumber.text = order.cancellationReason
                     tvRowPcDeliveryDate.visibility = View.GONE
-
                 }
             }
 

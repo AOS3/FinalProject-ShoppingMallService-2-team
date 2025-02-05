@@ -337,7 +337,13 @@ class PaymentFragment : Fragment() {
                     }
 
                     // 구매 항목 데이터 저장
-                    PaymentRepository.add_purchase_product(purchase_product)
+                    PaymentRepository.add_purchase_product(purchase_product) { success, message ->
+                        if (success) {
+                            Log.d("PurchaseSave", "All purchases saved successfully.")
+                        } else {
+                            Log.e("PurchaseSave", "Error saving purchases: $message")
+                        }
+                    }
 
                 }.await()
 

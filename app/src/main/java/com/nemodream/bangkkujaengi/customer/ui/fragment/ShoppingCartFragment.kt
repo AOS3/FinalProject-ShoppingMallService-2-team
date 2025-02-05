@@ -73,9 +73,9 @@ class ShoppingCartFragment : Fragment() {
         setting_recyclerview()
 
 
-        fn_test_button()
-        fn_btn_shopping_cart_order_history()
-        fn_btn_non_member_order_fragment()
+        // fn_test_button()
+        // fn_btn_shopping_cart_order_history()
+        // fn_btn_non_member_order_fragment()
 
         return fragmentShoppingCartBinding.root
     }
@@ -195,28 +195,6 @@ class ShoppingCartFragment : Fragment() {
 
                 Log.d("user_data", "${memberData?.memberPhoneNumber}")
 
-//                val productData = PaymentProduct(
-//                    items = listOf(
-//                        PaymentItems(
-//                            productId = "L0JpdVtcyvEkbHMM0Oms", // 원하는 상품 ID
-//                            color = "RED",                // 원하는 색상
-//                            quantity = 3,                 // 원하는 수량
-//                            checked = true               // 선택 여부 (예: false)
-//                        )
-//                    ),
-//                    userId = user_id // 실제 사용자 ID
-//                )
-//
-//                val action = ShoppingCartFragmentDirections.actionNavigationCartToPaymentFragment(
-//                    user_id,
-//                    user_type,
-//                    memberData?.memberName.toString(),
-//                    memberData?.memberPhoneNumber.toString(),
-//                    "서울시 강남구 역삼동",
-//                    "order",
-//                    productData
-//                )
-
                 val action = ShoppingCartFragmentDirections.actionNavigationCartToPaymentFragment(
                     user_id,
                     user_type,
@@ -238,7 +216,7 @@ class ShoppingCartFragment : Fragment() {
         fragmentShoppingCartBinding.btnShoppingCartItemAdd.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 val work1 = async(Dispatchers.IO) {
-                    ShoppingCartRepository.add_cart_items_by_product_ids(user_id)
+//                    ShoppingCartRepository.add_cart_items_by_product_ids(user_id)
                 }.await()
             }
         }

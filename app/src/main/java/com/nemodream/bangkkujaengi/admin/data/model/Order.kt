@@ -1,6 +1,7 @@
 package com.nemodream.bangkkujaengi.admin.data.model
 
 data class Order(
+    val documentId: String,              // 구매 상품 문서 아이디
     val orderDate: String?,               // 주문일시
     val productName: String,              // 상품명
     val customerId: String,               // 구매자 ID
